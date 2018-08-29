@@ -21,16 +21,14 @@ import java.util.Vector;
 public class RemoteFileListAdapter extends BaseAdapter {
 
     private Vector<ChannelSftp.LsEntry> mFiles;
-    private Context mContext;
     private LayoutInflater mInflater;
 
     //
     // Constructor
     //
     public RemoteFileListAdapter(Context context, Vector<ChannelSftp.LsEntry> files) {
-        mContext = context;
         mFiles = files;
-        mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public int getCount() {
@@ -53,8 +51,8 @@ public class RemoteFileListAdapter extends BaseAdapter {
             holder = new ViewHolder();
 
             convertView = mInflater.inflate(R.layout.listview_item, null);
-            ImageView imageView = (ImageView)convertView.findViewById(R.id.imageview_item);
-            TextView textView = (TextView) convertView.findViewById(R.id.textview_item);
+            ImageView imageView = convertView.findViewById(R.id.imageview_item);
+            TextView textView = convertView.findViewById(R.id.textview_item);
             holder.textView = textView;
             holder.imageView = imageView;
             // change text color for directories

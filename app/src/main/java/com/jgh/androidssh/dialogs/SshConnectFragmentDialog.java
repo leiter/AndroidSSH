@@ -46,11 +46,11 @@ public class SshConnectFragmentDialog  extends DialogFragment implements View.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
-        mUserEdit = (EditText) v.findViewById(R.id.username);
-        mHostEdit = (EditText) v.findViewById(R.id.hostname);
-        mPasswordEdit = (EditText) v.findViewById(R.id.password);
-        mPortNumEdit = (EditText) v.findViewById(R.id.portnum);
-        mButton = (Button) v.findViewById(R.id.enterbutton);
+        mUserEdit = v.findViewById(R.id.username);
+        mHostEdit = v.findViewById(R.id.hostname);
+        mPasswordEdit = v.findViewById(R.id.password);
+        mPortNumEdit = v.findViewById(R.id.portnum);
+        mButton = v.findViewById(R.id.enterbutton);
         mButton.setOnClickListener(this);
         return v;
     }

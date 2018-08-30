@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AndroidSSH" parent="android:Theme.Light" />
+    <style name="AndroidSSH" parent="Theme.AppCompat.DayNight.DarkActionBar" />
 
     <style name="buttonStyle" parent="android:style/Widget.Button">
         <item name="android:layout_margin">@dimen/layout_margin</item>

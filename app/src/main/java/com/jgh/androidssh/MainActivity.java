@@ -1,14 +1,12 @@
 
 package com.jgh.androidssh;
 
-import java.util.regex.Pattern;
-
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,11 +24,13 @@ import com.jgh.androidssh.sshutils.ConnectionStatusListener;
 import com.jgh.androidssh.sshutils.ExecTaskCallbackHandler;
 import com.jgh.androidssh.sshutils.SessionController;
 
+import java.util.regex.Pattern;
+
 /**
  * Main activity. Connect to SSH server and launch command shell.
  *
  */
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     private static final String TAG = "MainActivity";
     private TextView mConnectStatus;

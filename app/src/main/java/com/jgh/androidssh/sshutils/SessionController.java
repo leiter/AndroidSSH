@@ -13,6 +13,7 @@ import com.jgh.androidssh.domain.SessionUserInfo;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -31,6 +32,16 @@ public class SessionController {
      * JSch UserInfo
      */
     private SessionUserInfo mSessionUserInfo;
+
+    public List<SessionUserInfo> getUserInfos() {
+        return mUserInfos;
+    }
+
+    public void setmUserInfos(List<SessionUserInfo> userInfos) {
+        this.mUserInfos = userInfos;
+    }
+
+    private List<SessionUserInfo> mUserInfos;
     /**
      * Thread for background tasks
      */

@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,7 +27,6 @@ import java.util.regex.Pattern;
 
 /**
  * Main activity. Connect to SSH server and launch command shell.
- *
  */
 public class MainActivity extends AppCompatActivity implements OnClickListener {
 
@@ -42,13 +40,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     private Handler mTvHandler;
     private String mLastLine;
 
+
+    public MainActivity() {
+        SessionController.getSessionController();
+    }
+
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-
-        // Set no title
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.activity_main);
         mButton = findViewById(R.id.enterbutton);
         mEndSessionBtn = findViewById(R.id.endsessionbutton);
@@ -59,8 +58,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         mButton.setOnClickListener(this);
         mEndSessionBtn.setOnClickListener(this);
         mSftpButton.setOnClickListener(this);
-
-        mConnectStatus.setText("Connect Status: NOT CONNECTED");
+        int connectionStatus = (SessionController.getSessionController().getSessionUserInfo() != null
+                && SessionController.getSessionController().getSession().isConnected())
+                ? R.string.connected : R.string.not_connected;
+        mConnectStatus.setText(connectionStatus);
         //handlers
         mHandler = new Handler();
         mTvHandler = new Handler();
@@ -155,8 +156,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         if (index == -1) {
             return mCommandEdit.getText().toString().trim();
         }
-        if(mLastLine == null){
-            Toast.makeText(this, "no text to process", Toast.LENGTH_LONG);
+        if (mLastLine == null) {
+            Toast.makeText(this, "no text to process", Toast.LENGTH_LONG).show();
             return "";
         }
         String[] lines = mLastLine.split(Pattern.quote(mCommandEdit.getPrompt()));
@@ -192,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     public void onClick(View v) {
         if (v == mButton) {
-           showDialog();
+            showDialog();
 
         } else if (v == mSftpButton) {
             if (SessionController.isConnected()) {
@@ -226,10 +227,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             @Override
             public void onDisconnected() {
 
-                mTvHandler.post(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mConnectStatus.setText("Connection Status: NOT CONNECTED");
+                        mConnectStatus.setText(R.string.not_connected);
                     }
                 });
             }
@@ -237,10 +238,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             @Override
             public void onConnected() {
 
-                mTvHandler.post(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mConnectStatus.setText("Connection Status: CONNECTED");
+                        mConnectStatus.setText(R.string.connected);
                     }
                 });
             }

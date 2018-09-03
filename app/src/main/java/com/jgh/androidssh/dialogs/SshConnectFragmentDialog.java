@@ -28,15 +28,6 @@ public class SshConnectFragmentDialog extends DialogFragment implements View.OnC
     private Button mButton;
     private ConnectionStatusListener mListener;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        if (args!=null){
-            userInfoList = (List<SessionUserInfo>) args.getSerializable(USER_INFO_LIST);
-        }
-    }
-
     public void setListener(ConnectionStatusListener listenr) {
         mListener = listenr;
     }
@@ -48,6 +39,12 @@ public class SshConnectFragmentDialog extends DialogFragment implements View.OnC
             userInfo.putBundle(USER_INFO_LIST,userInfo);
         }
         return fragment;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        userInfoList = SessionController.getSessionController().getUserInfos();
     }
 
     @Override

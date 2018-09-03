@@ -46,7 +46,7 @@ import java.util.Vector;
 public class FileListActivity extends Activity implements OnItemClickListener, OnClickListener, OnDragListener {
 
     private static final String TAG = "FileListActivity";
-    private ArrayList<File> mFilenames = new ArrayList<File>();
+    private ArrayList<File> mFilenames = new ArrayList<>();
     private GridView mLocalGridView;
     private GridView mRemoteGridView;
     private FileListAdapter mFileListAdapter;

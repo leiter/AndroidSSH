@@ -1,6 +1,8 @@
-package com.jgh.androidssh.sshutils;
+package com.jgh.androidssh.domain;
 
 import com.jcraft.jsch.UserInfo;
+
+import java.io.Serializable;
 
 /**
  * A class to hold information used to make JSch session connections.
@@ -9,7 +11,7 @@ import com.jcraft.jsch.UserInfo;
  *
  * @author Jonathan Hough
  */
-public class SessionUserInfo implements UserInfo {
+public class SessionUserInfo implements UserInfo, Serializable {
 
     /**
      * User password.

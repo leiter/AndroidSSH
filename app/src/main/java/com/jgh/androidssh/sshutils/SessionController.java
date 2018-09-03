@@ -4,18 +4,16 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.EditText;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.InterruptedException;
-
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
+import com.jgh.androidssh.domain.SessionUserInfo;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Controller for Jsch SSH sessions. All SSH
@@ -54,15 +52,21 @@ public class SessionController {
     /**
      * Instance
      */
-    private static SessionController sSessionController;
+    private static volatile SessionController sSessionController;
 
 
     private SessionController() {
+        mShellController = new ShellController();
     }
 
     public static SessionController getSessionController() {
         if (sSessionController == null) {
-            sSessionController = new SessionController();
+            synchronized (SessionController.class){
+                if (sSessionController == null){
+                    sSessionController = new SessionController();
+
+                }
+            }
         }
         return sSessionController;
     }

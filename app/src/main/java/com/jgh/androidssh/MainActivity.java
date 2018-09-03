@@ -50,11 +50,11 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_main);
-        mButton = (Button) findViewById(R.id.enterbutton);
-        mEndSessionBtn = (Button) findViewById(R.id.endsessionbutton);
-        mSftpButton = (Button) findViewById(R.id.sftpbutton);
-        mCommandEdit = (SshEditText) findViewById(R.id.command);
-        mConnectStatus = (TextView) findViewById(R.id.connectstatus);
+        mButton = findViewById(R.id.enterbutton);
+        mEndSessionBtn = findViewById(R.id.endsessionbutton);
+        mSftpButton = findViewById(R.id.sftpbutton);
+        mCommandEdit = findViewById(R.id.command);
+        mConnectStatus = findViewById(R.id.connectstatus);
         // set onclicklistener
         mButton.setOnClickListener(this);
         mEndSessionBtn.setOnClickListener(this);
@@ -144,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         };
 
         intent.putExtra("UserInfo", info);
-
         startActivity(intent);
     }
 
@@ -222,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        SshConnectFragmentDialog newFragment = SshConnectFragmentDialog.newInstance();
+        SshConnectFragmentDialog newFragment = SshConnectFragmentDialog.newInstance(null);
         newFragment.setListener(new ConnectionStatusListener() {
             @Override
             public void onDisconnected() {

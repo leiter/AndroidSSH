@@ -12,4 +12,5 @@
     <item name="darkorange" type="color">#FFFF8800</item>
     <item name="almostblack" type="color">#FF302533</item>
     <item name="eggshell" type="color">#FFEEEAEE</item>
+    <color name="primary_material_dark">#df3c3c</color>
 </resources>

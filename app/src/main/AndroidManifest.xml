@@ -25,10 +25,8 @@
         </activity>
         <activity
             android:name=".FileListActivity"
-            android:label="FileListActivity"></activity>
-        <activity
-            android:name=".ConfigActivity"
-            android:label="@string/title_activity_config"></activity>
+            android:label="FileListActivity" />
+
     </application>
 
 </manifest>

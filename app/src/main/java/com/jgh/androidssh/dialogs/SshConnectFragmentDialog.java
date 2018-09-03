@@ -2,6 +2,7 @@ package com.jgh.androidssh.dialogs;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,34 +12,41 @@ import android.widget.EditText;
 import com.jgh.androidssh.R;
 import com.jgh.androidssh.sshutils.ConnectionStatusListener;
 import com.jgh.androidssh.sshutils.SessionController;
-import com.jgh.androidssh.sshutils.SessionUserInfo;
+import com.jgh.androidssh.domain.SessionUserInfo;
+
+import java.util.List;
 
 
-public class SshConnectFragmentDialog  extends DialogFragment implements View.OnClickListener {
+public class SshConnectFragmentDialog extends DialogFragment implements View.OnClickListener {
 
+    private static final String USER_INFO_LIST = "userInfoList";
+    private List<SessionUserInfo> userInfoList;
     private EditText mUserEdit;
     private EditText mHostEdit;
     private EditText mPasswordEdit;
     private EditText mPortNumEdit;
     private Button mButton;
-
-
-    private SessionUserInfo mSUI;
     private ConnectionStatusListener mListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Bundle args = getArguments();
+        if (args!=null){
+            userInfoList = (List<SessionUserInfo>) args.getSerializable(USER_INFO_LIST);
+        }
     }
 
-    public void setListener(ConnectionStatusListener listenr){
+    public void setListener(ConnectionStatusListener listenr) {
         mListener = listenr;
     }
 
-    public static SshConnectFragmentDialog newInstance() {
+    public static SshConnectFragmentDialog newInstance(@Nullable SessionUserInfo info) {
         SshConnectFragmentDialog fragment = new SshConnectFragmentDialog();
-
+        if (info != null) {
+            Bundle userInfo = new Bundle();
+            userInfo.putBundle(USER_INFO_LIST,userInfo);
+        }
         return fragment;
     }
 
@@ -76,44 +84,15 @@ public class SshConnectFragmentDialog  extends DialogFragment implements View.On
                 return;
             }
             int port = Integer.valueOf(mPortNumEdit.getText().toString());
-            mSUI = new SessionUserInfo(mUserEdit.getText().toString().trim(), mHostEdit.getText()
+            SessionUserInfo mSUI = new SessionUserInfo(mUserEdit.getText().toString().trim(), mHostEdit.getText()
                     .toString().trim(),
                     mPasswordEdit.getText().toString().trim(), port);
 
             SessionController.getSessionController().setUserInfo(mSUI);
             SessionController.getSessionController().connect();
 
-            if(mListener != null)
+            if (mListener != null)
                 SessionController.getSessionController().setConnectionStatusListener(mListener);
-
-
-//
-//
-//                    new ConnectionStatusListener() {
-//                @Override
-//                public void onDisconnected() {
-//
-//
-////                    mTvHandler.post(new Runnable() {
-////                        @Override
-////                        public void run() {
-////                            mConnectStatus.setText("Connection Status: NOT CONNECTED");
-////                        }
-////                    });
-//                }
-//
-//                @Override
-//                public void onConnected() {
-//
-//
-////                    mTvHandler.post(new Runnable() {
-////                        @Override
-////                        public void run() {
-////                            mConnectStatus.setText("Connection Status: CONNECTED");
-////                        }
-////                    });
-//                }
-//            });
             this.dismiss();
 
         }

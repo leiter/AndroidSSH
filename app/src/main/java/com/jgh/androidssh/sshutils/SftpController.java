@@ -155,9 +155,8 @@ public class SftpController {
                 e.printStackTrace();
                 Log.e(TAG, "SftpException " + e.getMessage());
                 success = false;
-            } finally {
-                return success;
             }
+            return success;
         }
 
         @Override

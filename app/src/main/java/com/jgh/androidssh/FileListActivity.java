@@ -31,6 +31,8 @@ import com.jgh.androidssh.sshutils.TaskCallbackHandler;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Vector;
 
 
@@ -71,26 +73,24 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
         setContentView(R.layout.activity_filelistactivity);
 
         mUserInfo = getIntent().getExtras().getStringArray("UserInfo");
-        mLocalGridView = (GridView) findViewById(R.id.listview);
-        mRemoteGridView = (GridView) findViewById(R.id.remotelistview);
+        mLocalGridView = findViewById(R.id.listview);
+        mRemoteGridView = findViewById(R.id.remotelistview);
         // Get external storage
         mRootFile = Environment.getExternalStorageDirectory();
         // list files
-        for (File f : mRootFile.listFiles()) {
-            mFilenames.add(f);
-        }
+        mFilenames.addAll(Arrays.asList(mRootFile.listFiles()));
 
         mFileListAdapter = new FileListAdapter(this, mFilenames);
 
         mLocalGridView.setAdapter(mFileListAdapter);
         mLocalGridView.setOnItemClickListener(this);
         //----------------- buttons ---------------//
-        mUpButton = (Button) findViewById(R.id.upbutton);
+        mUpButton = findViewById(R.id.upbutton);
         mUpButton.setOnClickListener(this);
-        mConnectButton = (Button) findViewById(R.id.connectbutton);
+        mConnectButton = findViewById(R.id.connectbutton);
         mConnectButton.setOnClickListener(this);
 
-        mStateView = (TextView) findViewById(R.id.statetextview);
+        mStateView = findViewById(R.id.statetextview);
 
         mSessionController = SessionController.getSessionController();
         mSessionController.connect();
@@ -138,9 +138,7 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
             if (mRootFile.listFiles() == null) {
                 return;
             }
-            for (File f : mRootFile.listFiles()) {
-                mFilenames.add(f);
-            }
+            mFilenames.addAll(Arrays.asList(mRootFile.listFiles()));
 
             setAdapter(mFilenames);
             mLocalGridView.setAdapter(mFileListAdapter);
@@ -162,14 +160,12 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
     public void onClick(View v) {
         if (v == mUpButton) {
 
-            boolean hasParent = mRootFile.getParentFile() == null ? false : true;
+            boolean hasParent = mRootFile.getParentFile() != null;
             if (hasParent) {
                 mRootFile = mRootFile.getParentFile();
 
                 mFilenames.clear();
-                for (File f : mRootFile.listFiles()) {
-                    mFilenames.add(f);
-                }
+                Collections.addAll(mFilenames, mRootFile.listFiles());
 
                 setAdapter(mFilenames);
                 mLocalGridView.setAdapter(mFileListAdapter);
@@ -238,7 +234,7 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
          * @param theme
          */
 
-        public SftpProgressDialog(Context context, int theme) {
+        SftpProgressDialog(Context context, int theme) {
             super(context, theme);
             // TODO Auto-generated constructor stub
         }

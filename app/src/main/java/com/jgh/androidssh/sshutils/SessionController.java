@@ -16,21 +16,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * Controller for Jsch SSH sessions. All SSH
- * connections are run through this class.
- */
 public class SessionController {
 
     private static final String TAG = "SessionController";
 
-    /**
-     * JSch Session
-     */
     private Session mSession;
-    /**
-     * JSch UserInfo
-     */
+
     private SessionUserInfo mSessionUserInfo;
 
     public List<SessionUserInfo> getUserInfos() {
@@ -42,105 +33,60 @@ public class SessionController {
     }
 
     private List<SessionUserInfo> mUserInfos;
-    /**
-     * Thread for background tasks
-     */
+
     private Thread mThread;
-    /**
-     * Controls SFTP interface
-     */
-    private SftpController mSftpController;
 
-    /**
-     * Controls Shell interface
-     */
-    private ShellController mShellController;
+    private final SftpController mSftpController = new SftpController();
 
-    /**
-     * Listener object for connection status changed.
-     */
+    private final ShellController mShellController = new ShellController();
+
     private ConnectionStatusListener mConnectStatusListener;
-    /**
-     * Instance
-     */
+
     private static volatile SessionController sSessionController;
 
-
     private SessionController() {
-        mShellController = new ShellController();
     }
 
     public static SessionController getSessionController() {
         if (sSessionController == null) {
-            synchronized (SessionController.class){
-                if (sSessionController == null){
+            synchronized (SessionController.class) {
+                if (sSessionController == null) {
                     sSessionController = new SessionController();
-
                 }
             }
         }
         return sSessionController;
     }
 
-    /**
-     * Gets the JSch SSH session instance
-     *
-     * @return session
-     */
     public Session getSession() {
         return mSession;
     }
 
-    /**
-     * Private constructor
-     *
-     * @param sessionUserInfo The SessionUserInfo to be used by all SSH channels.
-     */
-    private SessionController(SessionUserInfo sessionUserInfo) {
-        mSessionUserInfo = sessionUserInfo;
-        connect();
-
-    }
-
-    /**
-     * @return
-     */
-    public static boolean exists() {
+    private static boolean exists() {
         return sSessionController != null;
     }
 
-    /**
-     * Checks if the session instance is connected.
-     *
-     * @return True if connected, false otherwise.
-     */
     public static boolean isConnected() {
         Log.v(TAG, "session controller exists... " + exists());
         if (exists()) {
             Log.v(TAG, "disconnecting");
-            if (getSessionController().getSession().isConnected())
-                return true;
+            return getSessionController().getSession() != null
+                    && getSessionController().getSession().isConnected();
         }
         return false;
     }
 
-    /**
-     * Sets the user info for Session connection. User info includes
-     * username, hostname and user password.
-     *
-     * @param sessionUserInfo Session User Info
-     */
     public void setUserInfo(SessionUserInfo sessionUserInfo) {
         mSessionUserInfo = sessionUserInfo;
+        if(!mUserInfos.contains(sessionUserInfo)){
+            mUserInfos.add(sessionUserInfo);
+        }
     }
 
     public SessionUserInfo getSessionUserInfo() {
         return mSessionUserInfo;
     }
 
-    /**
-     * Opens SSH connection to remote host.
-     */
     public void connect() {
         if (mSession == null) {
             mThread = new Thread(new SshRunnable());
@@ -151,98 +97,39 @@ public class SessionController {
         }
     }
 
-    /**
-     * Returns the SFTP controller instance.
-     *
-     * @return SftpController
-     */
     public SftpController getSftpController() {
         return mSftpController;
     }
-
 
     public void setConnectionStatusListener(ConnectionStatusListener csl) {
         mConnectStatusListener = csl;
     }
 
-
-    /**
-     * Uploads files to remote server.
-     *
-     * @param files list of files to upload
-     * @param spm   progress monitor, to monitor upload completion percentage
-     */
     public void uploadFiles(File[] files, SftpProgressMonitor spm) {
-        if (mSftpController == null) {
-            mSftpController = new SftpController();
-
-        }
         mSftpController.new UploadTask(mSession, files, spm).execute();
     }
 
-
-    /**
-     * Downloads file from remote server.
-     *
-     * @param srcPath
-     * @param out
-     * @param spm
-     * @return
-     * @throws JSchException
-     * @throws SftpException
-     */
     public boolean downloadFile(String srcPath, String out, SftpProgressMonitor spm) throws JSchException, SftpException {
-        if (mSftpController == null) {
-            mSftpController = new SftpController();
-
-        }
         mSftpController.new DownloadTask(mSession, srcPath, out, spm).execute();
         return true;
     }
 
-    /**
-     * Lists the files in the current directory on remote server.
-     *
-     * @param taskCallbackHandler
-     * @param path
-     * @throws JSchException
-     * @throws SftpException
-     */
     public void listRemoteFiles(TaskCallbackHandler taskCallbackHandler, String path) throws JSchException, SftpException {
 
         if (mSession == null || !mSession.isConnected()) {
             return;
         }
-
-        if (mSftpController == null) {
-            mSftpController = new SftpController();
-
-        }
-        //list the files.
         mSftpController.lsRemoteFiles(mSession, taskCallbackHandler, path);
-
-
     }
 
 
-    /**
-     * Disconnects session and all channels.
-     *
-     * @throws java.io.IOException
-     */
     public void disconnect() throws IOException {
 
         if (mSession != null) {
-            if (mSftpController != null) {
-
-                mSftpController.disconnect();
-            }
-            if (mShellController != null) {
-                try {
-                    mShellController.disconnect();
-                } catch (IOException e) {
-                    Log.e(TAG, "Exception closing shell controller. " + e.getMessage());
-                }
+            try {
+                mShellController.disconnect();
+            } catch (IOException e) {
+                Log.e(TAG, "Exception closing shell controller. " + e.getMessage());
             }
             synchronized (mConnectStatusListener) {
                 if (mConnectStatusListener != null) {
@@ -260,33 +147,25 @@ public class SessionController {
             }
         }
 
-        mSftpController = null;
-        mShellController = null;
     }
 
+    synchronized void disconnector(){
+        if (mConnectStatusListener != null) {
+            mConnectStatusListener.onDisconnected();
+        }
+    }
 
-    /**
-     * Execute command on remote server. If SSH is not open, SSH shell will be opened and
-     * command executed.
-     *
-     * @param command command to execute on remote host.
-     * @return command sent true, if not false
-     */
     public boolean executeCommand(Handler handler, EditText editText, ExecTaskCallbackHandler callback, String command) {
         if (mSession == null || !mSession.isConnected()) {
             return false;
         } else {
 
-            if (mShellController == null) {
-                mShellController = new ShellController();
+            try {
+                mShellController.openShell(getSession(), handler, editText);
 
-                try {
-                    mShellController.openShell(getSession(), handler, editText);
-
-                } catch (Exception e) {
-                    Log.e(TAG, "Shell open exception " + e.getMessage());
-                    //TODO fix general exception catching
-                }
+            } catch (Exception e) {
+                Log.e(TAG, "Shell open exception " + e.getMessage());
+                //TODO fix general exception catching
             }
 
             synchronized (mShellController) {
@@ -297,11 +176,6 @@ public class SessionController {
         return true;
     }
 
-
-    /**
-     * Runnable for beginning session. Opens JSch session with username, password and host information from
-     * <b>mSessionUserInfo</b>.
-     */
     public class SshRunnable implements Runnable {
 
         public void run() {

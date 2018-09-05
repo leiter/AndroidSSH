@@ -7,7 +7,7 @@ import android.widget.EditText;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import com.jgh.androidssh.SshEditText;
+import com.jgh.androidssh.overall.SshEditText;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -111,6 +111,11 @@ public class ShellController {
      * @param editText EditText to act as input and output point.
      * @throws JSchException
      * @throws java.io.IOException
+     *
+     *
+     * Try to make handle not point to local myHandler
+     *
+     *
      */
     public void openShell(Session session, Handler handler, EditText editText) throws JSchException, IOException {
         if (session == null) throw new NullPointerException("Session cannot be null!");
@@ -169,11 +174,11 @@ public class ShellController {
     public static String removePrompt(String command){
         if(command != null && command.trim().split("\\$").length > 1){
             String[] split = command.trim().split("\\$");
-            String s = "";
+            StringBuilder s = new StringBuilder();
             for(int i = 1; i< split.length; i++){
-                s += split[i];
+                s.append(split[i]);
             }
-            return s;
+            return s.toString();
         }
         return command;
     }

@@ -1,9 +1,11 @@
 
-package com.jgh.androidssh;
+package com.jgh.androidssh.overall;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -18,17 +20,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jgh.androidssh.R;
 import com.jgh.androidssh.dialogs.SshConnectFragmentDialog;
+import com.jgh.androidssh.domain.SessionUserInfo;
 import com.jgh.androidssh.sshutils.ConnectionStatusListener;
 import com.jgh.androidssh.sshutils.ExecTaskCallbackHandler;
 import com.jgh.androidssh.sshutils.SessionController;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * Main activity. Connect to SSH server and launch command shell.
- */
-public class MainActivity extends AppCompatActivity implements OnClickListener {
+public class MainActivity extends AppCompatActivity implements ConnectionStatusListener,OnClickListener {
 
     private static final String TAG = "MainActivity";
     private TextView mConnectStatus;
@@ -37,9 +40,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     private Button mButton, mEndSessionBtn, mSftpButton;
 
     private Handler mHandler;
-    private Handler mTvHandler;
     private String mLastLine;
-
 
     public MainActivity() {
         SessionController.getSessionController();
@@ -61,10 +62,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         int connectionStatus = (SessionController.getSessionController().getSessionUserInfo() != null
                 && SessionController.getSessionController().getSession().isConnected())
                 ? R.string.connected : R.string.not_connected;
+
         mConnectStatus.setText(connectionStatus);
         //handlers
         mHandler = new Handler();
-        mTvHandler = new Handler();
 
         //text change listener, for getting the current input changes.
         mCommandEdit.addTextChangedListener(new TextWatcher() {
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
                                 @Override
                                 public void onComplete(String completeString) {
+                                    Log.d("onComplete", "ExecTaskCallbackHandler");
                                 }
                             };
                             mCommandEdit.AddLastInput(command);
@@ -119,23 +121,16 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                     }
                 }
         );
+
+
+        loadUserListFromPrefs();
     }
 
-
-    /**
-     * Displays toast to user.
-     *
-     * @param text
-     */
 
     private void makeToast(int text) {
-        Toast.makeText(this, getResources().getString(text), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * Start activity to do SFTP transfer. User will choose from list of files
-     * to transfer.
-     */
     private void startSftpActivity() {
         Intent intent = new Intent(this, FileListActivity.class);
         String[] info = {
@@ -148,9 +143,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         startActivity(intent);
     }
 
-    /**
-     * @return
-     */
     private String getLastLine() {
         int index = mCommandEdit.getText().toString().lastIndexOf("\n");
         if (index == -1) {
@@ -178,17 +170,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         }
     }
 
-    /**
-     * Checks if the EditText is empty.
-     *
-     * @param editText
-     * @return true if empty
-     */
     private boolean isEditTextEmpty(EditText editText) {
-        if (editText.getText() == null || editText.getText().toString().equalsIgnoreCase("")) {
-            return true;
-        }
-        return false;
+        return editText.getText() == null ||
+                editText.getText().toString().equalsIgnoreCase("");
     }
 
     public void onClick(View v) {
@@ -206,12 +190,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 if (SessionController.isConnected()) {
                     SessionController.getSessionController().disconnect();
                 }
-            } catch (Throwable t) { //catch everything!
+            } catch (Throwable t) {
                 Log.e(TAG, "Disconnect exception " + t.getMessage());
             }
-
         }
-
     }
 
     void showDialog() {
@@ -221,32 +203,75 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         ft.addToBackStack(null);
 
-        // Create and show the dialog.
         SshConnectFragmentDialog newFragment = SshConnectFragmentDialog.newInstance(null);
-        newFragment.setListener(new ConnectionStatusListener() {
-            @Override
-            public void onDisconnected() {
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mConnectStatus.setText(R.string.not_connected);
-                    }
-                });
-            }
-
-            @Override
-            public void onConnected() {
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mConnectStatus.setText(R.string.connected);
-                    }
-                });
-            }
-        });
-
+        newFragment.setListener(//new ConnectionStatusListener() {
+          this
+        //}
+        );
         newFragment.show(ft, "dialog");
     }
+
+    @Override
+    public void onDisconnected() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mConnectStatus.setText(R.string.not_connected);
+            }
+        });
+    }
+
+    @Override
+    public void onConnected() {
+        //saveUserLogin();
+        Log.e("onConnected","yes  ");
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mConnectStatus.setText(R.string.connected);
+            }
+        });
+    }
+
+    private String getUserList() {
+        List<SessionUserInfo> userInfos = SessionController.getSessionController().getUserInfos();
+
+        StringBuilder stringBuilder = new StringBuilder("");
+        if (userInfos != null)
+            for (SessionUserInfo sUi :
+                    userInfos) {
+                stringBuilder.append(sUi.getUser()).append(",")
+                        .append(sUi.getHost()).append(",")
+                        .append(sUi.getPort()).append(",").append(sUi.getPassword()).append("###");
+            }
+        return stringBuilder.toString();
+    }
+
+    private void loadUserListFromPrefs() {
+
+        SharedPreferences preferences = getSharedPreferences("userInfos", Context.MODE_PRIVATE);
+        String[] users = preferences.getString("users", "").split("###");
+        List<SessionUserInfo> result = new ArrayList<>();
+        if (users.length>0)Log.e("MAIN_users","sdfs  " + users.length);
+        if (users.length > 1) {
+            for (String s : users) {
+                String[] u = s.split(",");
+                result.add(new SessionUserInfo(u[0], u[1], u[3], Integer.valueOf(u[2])));
+            }
+        }
+
+        SessionController.getSessionController().setmUserInfos(result);
+    }
+
+    private void saveUserLogin() {
+        SharedPreferences preferences =
+                getSharedPreferences("userInfos", Context.MODE_PRIVATE);
+        String payload = getUserList();
+        Log.e("saveddd","no  " + payload);
+        preferences.edit().putString("users", payload).apply();
+
+    }
+
+
 }

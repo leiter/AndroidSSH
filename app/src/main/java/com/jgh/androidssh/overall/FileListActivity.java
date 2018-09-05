@@ -1,4 +1,4 @@
-package com.jgh.androidssh;
+package com.jgh.androidssh.overall;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -24,7 +24,8 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
-import com.jgh.androidssh.adapters.FileListAdapter;
+import com.jgh.androidssh.R;
+import com.jgh.androidssh.adapters.LocaleFileListAdapter;
 import com.jgh.androidssh.adapters.RemoteFileListAdapter;
 import com.jgh.androidssh.sshutils.SessionController;
 import com.jgh.androidssh.sshutils.TaskCallbackHandler;
@@ -49,7 +50,7 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
     private ArrayList<File> mFilenames = new ArrayList<>();
     private GridView mLocalGridView;
     private GridView mRemoteGridView;
-    private FileListAdapter mFileListAdapter;
+    private LocaleFileListAdapter mLocaleFileListAdapter;
     private RemoteFileListAdapter mRemoteFileListAdapter;
     private String[] mUserInfo;
     private File mRootFile;
@@ -80,9 +81,9 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
         // list files
         mFilenames.addAll(Arrays.asList(mRootFile.listFiles()));
 
-        mFileListAdapter = new FileListAdapter(this, mFilenames);
+        mLocaleFileListAdapter = new LocaleFileListAdapter(this, mFilenames);
 
-        mLocalGridView.setAdapter(mFileListAdapter);
+        mLocalGridView.setAdapter(mLocaleFileListAdapter);
         mLocalGridView.setOnItemClickListener(this);
         //----------------- buttons ---------------//
         mUpButton = findViewById(R.id.upbutton);
@@ -109,10 +110,6 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
 
     }
 
-    /**
-     * Sets up the remote file list.
-     * @param remoteFileListAdapter
-     */
     public void setupRemoteFiles(RemoteFileListAdapter remoteFileListAdapter) {
         mRemoteFileListAdapter = remoteFileListAdapter;
         mRemoteGridView.setAdapter(mRemoteFileListAdapter);
@@ -120,13 +117,8 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
 
     }
 
-    /**
-     * Sets the adapter with the given array list
-     *
-     * @param files
-     */
     private void setAdapter(ArrayList<File> files) {
-        mFileListAdapter = new FileListAdapter(this, files);
+        mLocaleFileListAdapter = new LocaleFileListAdapter(this, files);
     }
 
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
@@ -141,8 +133,8 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
             mFilenames.addAll(Arrays.asList(mRootFile.listFiles()));
 
             setAdapter(mFilenames);
-            mLocalGridView.setAdapter(mFileListAdapter);
-            mFileListAdapter.notifyDataSetChanged();
+            mLocalGridView.setAdapter(mLocaleFileListAdapter);
+            mLocaleFileListAdapter.notifyDataSetChanged();
 
         } else {
             // sftp the file
@@ -168,18 +160,14 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
                 Collections.addAll(mFilenames, mRootFile.listFiles());
 
                 setAdapter(mFilenames);
-                mLocalGridView.setAdapter(mFileListAdapter);
-                mFileListAdapter.notifyDataSetChanged();
+                mLocalGridView.setAdapter(mLocaleFileListAdapter);
+                mLocaleFileListAdapter.notifyDataSetChanged();
             }
 
         }
 
     }
 
-
-    /**
-     * Shows the remote files on the listview.
-     */
     private void showRemoteFiles() {
         final ProgressDialog progressDialog = new ProgressDialog(FileListActivity.this, 0);
         progressDialog.setIndeterminate(true);
@@ -218,52 +206,27 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
 
     private class SftpProgressDialog extends ProgressDialog implements SftpProgressMonitor {
 
-        /**
-         * Size of file to transfer
-         */
         private long mSize = 0;
-        /**
-         * Current progress count
-         */
-        private long mCount = 0;
 
-        /**
-         * Constructor
-         *
-         * @param context
-         * @param theme
-         */
+        private long mCount = 0;
 
         SftpProgressDialog(Context context, int theme) {
             super(context, theme);
             // TODO Auto-generated constructor stub
         }
 
-        //
-        // SftpProgressMonitor methods
-        //
-
-        /**
-         * Gets the data uploaded since the last count.
-         */
         public boolean count(long arg0) {
             mCount += arg0;
             this.setProgress((int) ((float) (mCount) / (float) (mSize) * (float) getMax()));
             return true;
         }
 
-        /**
-         * Data upload is ended. Dismiss progress dialog.
-         */
         public void end() {
             this.setProgress(this.getMax());
             this.dismiss();
 
         }
 
-        /**
-         * Initializes the SftpProgressMonitor
-         */
         public void init(int arg0, String arg1, String arg2, long arg3) {
             mSize = arg3;
 
@@ -272,11 +235,6 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
 
     }
 
-
-    /**
-     * Listener class for remote file list click events. Handles file and directory clicks
-     * from user.
-     */
     private class RemoteClickListener implements OnItemClickListener {
 
 
@@ -333,7 +291,6 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
 
             } else {
 
-                // sftp the file
                 SftpProgressDialog progressDialog = new SftpProgressDialog(FileListActivity.this, 0);
                 progressDialog.setIndeterminate(false);
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -355,10 +312,6 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
         }
     }
 
-
-    /**
-     * Drag shadow, for item dragging/dropping.
-     */
     private class DragShadow extends View.DragShadowBuilder {
 
         ColorDrawable mBox;
@@ -389,9 +342,6 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
         }
     }
 
-    /**
-     *  Drag Listener class. For dragging remote files to local and vice versa.
-     */
     private class FileDragListener implements OnDragListener{
 
         @Override

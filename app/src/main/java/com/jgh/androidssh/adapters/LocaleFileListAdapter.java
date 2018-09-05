@@ -1,6 +1,7 @@
 package com.jgh.androidssh.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +20,12 @@ import java.util.ArrayList;
  * file list. Differentiates between directories and non-directories.
  *
  */
-public class FileListAdapter extends BaseAdapter {
+public class LocaleFileListAdapter extends BaseAdapter {
 
     private ArrayList<File> mFiles;
     private LayoutInflater mInflater;
 
-    //
-    // Constructor
-    //
-    public FileListAdapter(Context context, ArrayList<File> files) {
+    public LocaleFileListAdapter(Context context, ArrayList<File> files) {
         mFiles = files;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -50,14 +48,9 @@ public class FileListAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-
             convertView = mInflater.inflate(R.layout.listview_item, parent, false);
-
-            ImageView imageView = convertView.findViewById(R.id.imageview_item);
-            TextView textView = convertView.findViewById(R.id.textview_item);
-            holder.textView = textView;
-            holder.imageView = imageView;
-            // change text color for directories
+            holder.textView = convertView.findViewById(R.id.textview_item);
+            holder.imageView = convertView.findViewById(R.id.imageview_item);;
             convertView.setTag(holder);
         }
         else {
@@ -65,6 +58,7 @@ public class FileListAdapter extends BaseAdapter {
         }
 
         holder.textView.setText(mFiles.get(position).getName());
+        holder.textView.setTextColor(Color.WHITE);
         if (mFiles.get(position).isDirectory()) {
             holder.color = 0xff009999;
             holder.imageView.setImageResource(R.drawable.folder);
@@ -74,24 +68,14 @@ public class FileListAdapter extends BaseAdapter {
             holder.imageView.setImageResource(R.drawable.file);
         }
 
-        holder.textView.setTextColor(holder.color);
+//        holder.textView.setTextColor(holder.color);
 
         return convertView;
     }
 
-
-
-    /**
-     * Private view holder class
-     *
-     */
-    private class ViewHolder {
+    private static class ViewHolder {
         ImageView imageView;
         TextView textView;
         int color;
     }
-
-
-
-
 }

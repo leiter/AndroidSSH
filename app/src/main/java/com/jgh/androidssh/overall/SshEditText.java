@@ -1,4 +1,4 @@
-package com.jgh.androidssh;
+package com.jgh.androidssh.overall;
 
 import android.content.Context;
 import android.text.InputType;
@@ -10,43 +10,22 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputConnectionWrapper;
 
-/**
- * EditText class for simulating an SSH shell terminal.
- * Main features of this class, compared to base EditText,
- * is the inability to delete (backspace) characters from
- * lines above the bottom line, as in a terminal.
- *
- */
 public class SshEditText extends android.support.v7.widget.AppCompatEditText {
 
     private String mlastInput;
 
     private String mPrompt = "";
-    /**
-     * First Constructor
-     * @param context
-     */
+
     public SshEditText(Context context) {
         super(context);
         setup();
     }
 
-    /**
-     * Second Constructor
-     * @param context
-     * @param attrs
-     */
     public SshEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         setup();
     }
 
-    /**
-     * Third constructor
-     * @param context
-     * @param attrs
-     * @param defStyle
-     */
     public SshEditText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setup();
@@ -64,10 +43,6 @@ public class SshEditText extends android.support.v7.widget.AppCompatEditText {
         setSelection(this.length());
     }
 
-    /**
-     * Returns the last line of user input.
-     * @return string input
-     */
     public String getLastInput() {
         synchronized (this) {
             String rez = mlastInput;
@@ -76,21 +51,12 @@ public class SshEditText extends android.support.v7.widget.AppCompatEditText {
         }
     }
 
-    /**
-     * Peeks the last line of user input.
-     * @return string input
-     */
     public String peekLastInput() {
         synchronized (this) {
-            return new String(mlastInput);
+            return mlastInput;
         }
     }
 
-
-    /**
-     * Sets the last input member variable to s.
-     * @param s
-     */
     public void AddLastInput(String s) {
         synchronized (this) {
             if (mlastInput == null) {
@@ -100,11 +66,6 @@ public class SshEditText extends android.support.v7.widget.AppCompatEditText {
         }
     }
 
-
-    /**
-     * Gets the current line the cursor is on.
-     * @return Current line, -1 if none.
-     */
     public int getCurrentCursorLine() {
         int selectionStart = Selection.getSelectionStart(this.getText());
         Layout layout = this.getLayout();
@@ -116,11 +77,6 @@ public class SshEditText extends android.support.v7.widget.AppCompatEditText {
         return -1;
     }
 
-    /**
-     * Returns true if currently on a new line with no
-     * input on the line.
-     * @return True if new line, false otherwise.
-     */
     public boolean isNewLine() {
 
         int i = this.getText().toString().toCharArray().length;
@@ -133,11 +89,6 @@ public class SshEditText extends android.support.v7.widget.AppCompatEditText {
         return false;
     }
 
-    /**
-     * Sets the prompt string. If parameter is null, then the prompt parameter
-     * will also be null.
-     * @param prompt
-     */
     public synchronized void setPrompt(String prompt){
         mPrompt = prompt;
     }

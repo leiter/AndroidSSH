@@ -22,110 +22,49 @@ import java.util.Vector;
  */
 public class SftpController {
 
-    /**
-     * Tag name
-     */
-    public static final String TAG = "SftpController";
+    private static final String TAG = "SftpController";
 
-    /**
-     * Remote directory path. The path to the current remote directory.
-     */
     private String mCurrentPath = "/";
 
-
-    /**
-     * Creates instance of SftpController. Performs SFTP functions.
-     */
-    public SftpController() {
+    SftpController() {
 
     }
 
-    /**
-     * Creates instance of SftpController. Performs SFTP functions.
-     *
-     * @param path path to chosen directory on remote host.
-     */
     public SftpController(String path) {
         mCurrentPath = path;
     }
 
-
-    /**
-     * Resets the current path on remote server.
-     */
     public void resetPathToRoot() {
         mCurrentPath = "/";
     }
 
-
-    /**
-     * Returns the path to the current directory on the
-     * remote server.
-     *
-     * @return
-     */
     public String getPath() {
         return mCurrentPath;
     }
 
-
-    /**
-     * Sets the path to current directory on the remote
-     * server.
-     *
-     * @param path
-     */
     public void setPath(String path) {
         mCurrentPath = path;
     }
 
-
-    /**
-     * Appends <b>relPath</b> to the current path on remote host.
-     *
-     * @param relPath relative path
-     */
     public void appendToPath(String relPath) {
         if (mCurrentPath == null) {
             mCurrentPath = relPath;
         } else mCurrentPath += relPath;
     }
 
-
-    /**
-     * Disconnects SFTP.
-     */
     public void disconnect() {
         //nothing yet
     }
 
-
-    /**
-     * Upload file(s) Task. Aysnc task for uploading local files to remote
-     * server.
-     */
     public class UploadTask extends AsyncTask<Void, Void, Boolean> {
 
-        /**
-         * JSch Session Instance
-         */
         private Session mSession;
 
-        /**
-         * Progress dialog to monitor upload progress.
-         */
         private SftpProgressMonitor mProgressDialog;
 
-        /**
-         * Array of local files to be uploaded
-         */
         private File[] mLocalFiles;
 
-        //
-        // Constructor
-        //
-
-        public UploadTask(Session session, File[] localFiles, SftpProgressMonitor spd) {
+        UploadTask(Session session, File[] localFiles, SftpProgressMonitor spd) {
 
             mProgressDialog = spd;
             mLocalFiles = localFiles;
@@ -166,19 +105,7 @@ public class SftpController {
 
     }
 
-
-    /**
-     * Uploads the files in <b>localFiles</b> to the current directory on
-     * remote server.
-     *
-     * @param session    the Jsch SSH session instance
-     * @param localFiles array of files to be uploaded
-     * @param spm        progress monitor
-     * @throws JSchException
-     * @throws java.io.IOException
-     * @throws SftpException
-     */
-    public void uploadFiles(Session session, File[] localFiles, SftpProgressMonitor spm) throws JSchException, IOException, SftpException {
+    private static void uploadFiles(Session session, File[] localFiles, SftpProgressMonitor spm) throws JSchException, IOException, SftpException {
         if (session == null || !session.isConnected()) {
             session.connect();
         }
@@ -208,35 +135,15 @@ public class SftpController {
     }
 
 
-    /**
-     * Shows all files (command ls) including directories.
-     */
     private class LsTask extends AsyncTask<Void, Void, Boolean> {
 
-        /**
-         * Vector of files in the remote server's current
-         * directory.
-         */
         private Vector<ChannelSftp.LsEntry> mRemoteFiles;
 
-        /**
-         * Callback handler for task completion ot failure.
-         */
         private TaskCallbackHandler mTaskCallbackHandler;
 
-        /**
-         * JSch session instance.
-         */
         private Session mSession;
 
-
-        /**
-         * Async Task for listing contents of remote directory.
-         *
-         * @param session currently connected Jsch session.
-         * @param tch     callback handler for completion or failure.
-         */
-        public LsTask(Session session, TaskCallbackHandler tch) {
+        LsTask(Session session, TaskCallbackHandler tch) {
 
             mSession = session;
             mTaskCallbackHandler = tch;
@@ -244,7 +151,7 @@ public class SftpController {
 
         @Override
         protected void onPreExecute() {
-            if(mTaskCallbackHandler != null)
+            if (mTaskCallbackHandler != null)
                 mTaskCallbackHandler.OnBegin();
         }
 
@@ -268,7 +175,7 @@ public class SftpController {
                         Log.d(TAG, "remote file list is null");
                     } else {
                         for (ChannelSftp.LsEntry e : mRemoteFiles) {
-                            //Log.v(TAG," file "+ e.getFilename());
+                            Log.v(TAG, " file " + e.getFilename());
                         }
                     }
                 }
@@ -299,19 +206,6 @@ public class SftpController {
         }
     }
 
-
-    /**
-     * Downloads the remote file at srcPath location on remote host, to the out
-     * location on local device.
-     * Uses SFTP get function.
-     *
-     * @param session
-     * @param srcPath
-     * @param out
-     * @param spm
-     * @throws JSchException
-     * @throws SftpException
-     */
     public void downloadFile(Session session, String srcPath, String out, SftpProgressMonitor spm) throws JSchException, SftpException {
         if (session == null || !session.isConnected()) {
             session.connect();
@@ -324,9 +218,6 @@ public class SftpController {
         sftpChannel.disconnect();
     }
 
-    /**
-     * Async Task for downloading remote file (sftp get command).
-     */
     public class DownloadTask extends AsyncTask<Void, Void, Boolean> {
 
         Session mSession;
@@ -334,15 +225,7 @@ public class SftpController {
         String mOut;
         SftpProgressMonitor mSpm;
 
-        /**
-         * Async Task for downloading remote file to local device (SFTP get command).
-         *
-         * @param session Current connected JSch Session
-         * @param srcPath Path to target file on remote server
-         * @param out     Path to output location on local device.
-         * @param spm     Progress monitor, to monitor download progress.
-         */
-        public DownloadTask(Session session, String srcPath, String out, SftpProgressMonitor spm) {
+        DownloadTask(Session session, String srcPath, String out, SftpProgressMonitor spm) {
             mSession = session;
             mSrcPath = srcPath;
             mOut = out;
@@ -365,9 +248,9 @@ public class SftpController {
             } catch (Exception e) {
                 Log.e(TAG, "EXCEPTION " + e.getMessage());
 
-            } finally {
-                return result;
             }
+            return result;
+
         }
 
         @Override

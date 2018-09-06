@@ -14,6 +14,8 @@ import com.jgh.androidssh.domain.SessionUserInfo;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 public class SessionController {
@@ -106,7 +108,11 @@ public class SessionController {
     }
 
     public void uploadFiles(File[] files, SftpProgressMonitor spm) {
-        mSftpController.new UploadTask(mSession, files, spm).execute();
+        if (mSftpController == null) {
+            mSftpController = new SftpController();
+
+        }
+        SftpController.invokeUpload(mSession, files, spm);
     }
 
     public boolean downloadFile(String srcPath, String out, SftpProgressMonitor spm) throws JSchException, SftpException {
@@ -203,19 +209,21 @@ public class SessionController {
             Log.d("SessionController", "Session connected? " + mSession.isConnected());
 
             new Thread(new Runnable() {
+                private boolean running = true;
                 @Override
                 public void run() {
-                    while (true) {
+                    while (running) {
                         //keep track of connection status
                         try {
                             Thread.sleep(2000);
                             if (mConnectStatusListener != null) {
+                                running = false;
                                 if (mSession.isConnected()) {
                                     mConnectStatusListener.onConnected();
                                 } else mConnectStatusListener.onDisconnected();
                             }
                         } catch (InterruptedException e) {
-
+                            Log.d("","");
                         }
                     }
                 }

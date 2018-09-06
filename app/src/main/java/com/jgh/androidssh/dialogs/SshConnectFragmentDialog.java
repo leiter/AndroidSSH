@@ -76,9 +76,23 @@ public class SshConnectFragmentDialog extends DialogFragment
         spinner.setVisibility(View.VISIBLE);
         spinner.setAdapter(new UserSpinnerAdapter(userInfoList));
         spinner.setOnItemSelectedListener(this);
+        setText();
         return v;
     }
 
+    private void setText(){
+        mUserEdit.setText("wir");
+        mHostEdit.setText("192.168.0.170");
+        mPasswordEdit.setText("wirZusammen");
+        mPortNumEdit.setText("72");
+    }
+
+    /**
+     * Checks if the EditText is empty.
+     *
+     * @param editText
+     * @return true if empty
+     */
     private boolean isEditTextEmpty(EditText editText) {
         return editText.getText() == null ||
                 editText.getText().toString().equalsIgnoreCase("");

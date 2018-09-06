@@ -56,7 +56,7 @@ public class SftpController {
         //nothing yet
     }
 
-    public class UploadTask extends AsyncTask<Void, Void, Boolean> {
+    public static class UploadTask extends AsyncTask<Void, Void, Boolean> {
 
         private Session mSession;
 
@@ -106,6 +106,24 @@ public class SftpController {
     }
 
     private static void uploadFiles(Session session, File[] localFiles, SftpProgressMonitor spm) throws JSchException, IOException, SftpException {
+    public static void invokeUpload(Session session, File[] localFiles, SftpProgressMonitor spd){
+        new UploadTask(session,localFiles,spd).execute();
+    }
+
+    /**
+     * Uploads the files in <b>localFiles</b> to the current directory on
+     * remote server.
+     *
+     * @param session    the Jsch SSH session instance
+     * @param localFiles array of files to be uploaded
+     * @param spm        progress monitor
+     * @throws JSchException
+     * @throws java.io.IOException
+     * @throws SftpException
+     */
+    public static void uploadFiles(Session session, File[] localFiles, SftpProgressMonitor spm)
+            throws JSchException, IOException, SftpException {
+
         if (session == null || !session.isConnected()) {
             session.connect();
         }
@@ -115,6 +133,7 @@ public class SftpController {
         channel.connect();
         ChannelSftp channelSftp = (ChannelSftp) channel;
 
+        channelSftp.cd(mCurrentPath);
         for (File file : localFiles) {
             channelSftp.put(file.getPath(), file.getName(), spm, ChannelSftp.APPEND);
         }
@@ -135,7 +154,10 @@ public class SftpController {
     }
 
 
-    private class LsTask extends AsyncTask<Void, Void, Boolean> {
+    /**
+     * Shows all files (command ls) including directories.
+     */
+    private static class LsTask extends AsyncTask<Void, Void, Boolean> {
 
         private Vector<ChannelSftp.LsEntry> mRemoteFiles;
 

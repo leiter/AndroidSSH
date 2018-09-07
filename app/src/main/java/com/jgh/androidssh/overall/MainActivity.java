@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
                 String[] sr = editable.toString().split("\r\n");
                 String s = sr[sr.length - 1];
                 mLastLine = s;
-
             }
         });
 
@@ -100,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
                             mCommandEdit.AddLastInput(command);
                             if(!SessionController.getSessionController().executeCommand(mCommandEdit, command)){
                                 makeToast(R.string.could_not_use_shell);
-                            };
+                            }
                             return false;
                         }
                     }
@@ -253,9 +252,9 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
         SharedPreferences preferences =
                 getSharedPreferences("userInfos", Context.MODE_PRIVATE);
         String payload = getUserList();
+//        if (!)
         Log.e("saveddd","no  " + payload);
         preferences.edit().putString("users", payload).apply();
-
     }
 
 

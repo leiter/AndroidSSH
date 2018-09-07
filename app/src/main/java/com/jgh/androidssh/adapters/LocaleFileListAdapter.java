@@ -48,9 +48,9 @@ public class LocaleFileListAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.listview_item, parent, false);
+            convertView = mInflater.inflate(R.layout.listview_item, null);
             holder.textView = convertView.findViewById(R.id.textview_item);
-            holder.imageView = convertView.findViewById(R.id.imageview_item);;
+            holder.imageView = convertView.findViewById(R.id.imageview_item);
             convertView.setTag(holder);
         }
         else {

@@ -124,7 +124,7 @@ public class SessionController {
     }
 
 
-    public void disconnect() throws IOException {
+    public void disconnect() {
 
         if (mSession != null) {
             try {
@@ -132,18 +132,18 @@ public class SessionController {
             } catch (IOException e) {
                 Log.e(TAG, "Exception closing shell controller. " + e.getMessage());
             }
-            synchronized (mConnectStatusListener) {
+//            synchronized (mConnectStatusListener) {
                 if (mConnectStatusListener != null) {
                     mConnectStatusListener.onDisconnected();
                 }
-            }
+//            }
 
             mSession.disconnect();
         }
         if (mThread != null && mThread.isAlive()) {
             try {
                 mThread.join();
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
                 Log.e(TAG, e.getMessage());
             }
         }

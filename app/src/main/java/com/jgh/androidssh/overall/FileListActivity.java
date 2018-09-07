@@ -53,13 +53,8 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
     private LocaleFileListAdapter mLocaleFileListAdapter;
     private RemoteFileListAdapter mRemoteFileListAdapter;
     private File mRootFile;
-    private Button mUpButton, mConnectButton;
-    private TextView mStateView;
     private SessionController mSessionController;
-    private RemoteClickListener mRemoteClickListener;
-    private Vector<ChannelSftp.LsEntry> mRemoteFiles;
     private boolean mIsProcessing = false;
-
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -72,23 +67,22 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
         mRootFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
         mFilenames.addAll(Arrays.asList(mRootFile.listFiles()));
 
-
         mLocaleFileListAdapter = new LocaleFileListAdapter(this, mFilenames);
 
         mLocalGridView.setAdapter(mLocaleFileListAdapter);
         mLocalGridView.setOnItemClickListener(this);
         //----------------- buttons ---------------//
-        mUpButton = findViewById(R.id.upbutton);
+        Button mUpButton = findViewById(R.id.upbutton);
         mUpButton.setOnClickListener(this);
-        mConnectButton = findViewById(R.id.connectbutton);
+        Button mConnectButton = findViewById(R.id.connectbutton);
         mConnectButton.setOnClickListener(this);
 
-        mStateView = findViewById(R.id.statetextview);
+        TextView mStateView = findViewById(R.id.statetextview);
 
         mSessionController = SessionController.getSessionController();
         mSessionController.connect();
 
-        mRemoteClickListener = new RemoteClickListener();
+        RemoteClickListener mRemoteClickListener = new RemoteClickListener();
         mRemoteGridView.setOnItemClickListener(mRemoteClickListener);
 
 
@@ -123,7 +117,6 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
                 return;
             }
             mFilenames.addAll(Arrays.asList(mRootFile.listFiles()));
-
             setAdapter(mFilenames);
             mLocalGridView.setAdapter(mLocaleFileListAdapter);
 //            mLocaleFileListAdapter.notifyDataSetChanged();
@@ -140,10 +133,8 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
 
     }
 
-    // go back up to parent folder
     public void onClick(View v) {
-        if (v == mUpButton) {
-
+        if (v.getId() == R.id.upbutton) {
             boolean hasParent = mRootFile.getParentFile() != null;
             if (hasParent && mRootFile.getParentFile().canRead()) {
                 mRootFile = mRootFile.getParentFile();
@@ -177,7 +168,6 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
                 public void onTaskFinished(Vector<ChannelSftp.LsEntry> lsEntries) {
                     mRemoteFileListAdapter = new RemoteFileListAdapter(FileListActivity.this, lsEntries);
                     mRemoteGridView.setAdapter(mRemoteFileListAdapter);
-//                    mRemoteFileListAdapter.notifyDataSetChanged();
                     progressDialog.dismiss();
                 }
             }, "");
@@ -224,7 +214,6 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
 
     private class RemoteClickListener implements OnItemClickListener {
 
-
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
             if (mIsProcessing) {
@@ -233,9 +222,9 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
             if (mRemoteFileListAdapter == null) {
                 return;
             }
-            //Is directory?
+            //Is directory?   TODO make depend on data only
             if (mRemoteFileListAdapter.getRemoteFiles().get(position).getAttrs().isDir()
-                    || mRemoteFileListAdapter.getRemoteFiles().get(position).getFilename().trim() == "..") {
+                    || "..".equals(mRemoteFileListAdapter.getRemoteFiles().get(position).getFilename().trim())) {
 
                 final ProgressDialog progressDialog = new ProgressDialog(FileListActivity.this, 0);
                 progressDialog.setIndeterminate(true);
@@ -245,7 +234,6 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
                 try {
                     mIsProcessing = true;
                     mSessionController.listRemoteFiles(new TaskCallbackHandler() {
-
 
                         @Override
                         public void OnBegin() {
@@ -323,7 +311,6 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
 
             mBox.setBounds(0, 0, width, height);
             shadowSize.set(width, height);
-
             shadowTouchPoint.set(width / 2, height / 2);
 
         }

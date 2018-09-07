@@ -80,6 +80,7 @@ public class SftpController {
 
             try {
                 uploadFiles(mSession, mLocalFiles, mProgressDialog);
+
                 return true;
             } catch (JSchException e) {
                 e.printStackTrace();
@@ -139,7 +140,6 @@ public class SftpController {
         private Session mSession;
 
         LsTask(Session session, TaskCallbackHandler tch) {
-
             mSession = session;
             mTaskCallbackHandler = tch;
         }

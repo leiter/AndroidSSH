@@ -20,7 +20,7 @@ import com.jgh.androidssh.sshutils.SessionController;
 import java.util.List;
 
 
-public class SshConnectFragmentDialog extends DialogFragment
+public final class SshConnectFragmentDialog extends DialogFragment
         implements View.OnClickListener {
 
     private static final String USER_INFO_LIST = "userInfoList";
@@ -29,7 +29,6 @@ public class SshConnectFragmentDialog extends DialogFragment
     private EditText mHostEdit;
     private EditText mPasswordEdit;
     private EditText mPortNumEdit;
-    private Button mButton;
     private ConnectionStatusListener mListener;
 
     public void setListener(ConnectionStatusListener listenr) {
@@ -69,7 +68,7 @@ public class SshConnectFragmentDialog extends DialogFragment
         mHostEdit = v.findViewById(R.id.hostname);
         mPasswordEdit = v.findViewById(R.id.password);
         mPortNumEdit = v.findViewById(R.id.portnum);
-        mButton = v.findViewById(R.id.enterbutton);
+        Button mButton = v.findViewById(R.id.enterbutton);
         mButton.setOnClickListener(this);
 
         Spinner spinner = v.findViewById(R.id.user_selector);

@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author Jonathan Hough
  */
-public class SessionUserInfo implements UserInfo, Serializable {
+public final class SessionUserInfo implements UserInfo, Serializable {
 
     /**
      * User password.

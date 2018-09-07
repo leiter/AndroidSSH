@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,7 +23,6 @@ import com.jgh.androidssh.R;
 import com.jgh.androidssh.dialogs.SshConnectFragmentDialog;
 import com.jgh.androidssh.domain.SessionUserInfo;
 import com.jgh.androidssh.sshutils.ConnectionStatusListener;
-import com.jgh.androidssh.sshutils.ExecTaskCallbackHandler;
 import com.jgh.androidssh.sshutils.SessionController;
 
 import java.util.ArrayList;
@@ -35,11 +33,9 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
 
     private static final String TAG = "MainActivity";
     private TextView mConnectStatus;
-
     private SshEditText mCommandEdit;
     private Button mButton, mEndSessionBtn, mSftpButton;
 
-    private Handler mHandler;
     private String mLastLine;
 
     public MainActivity() {
@@ -64,8 +60,6 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
                 ? R.string.connected : R.string.not_connected;
 
         mConnectStatus.setText(connectionStatus);
-        //handlers
-        mHandler = new Handler();
 
         //text change listener, for getting the current input changes.
         mCommandEdit.addTextChangedListener(new TextWatcher() {
@@ -103,19 +97,10 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
                             }
                             // get the last line of terminal
                             String command = getLastLine();
-                            ExecTaskCallbackHandler t = new ExecTaskCallbackHandler() {
-                                @Override
-                                public void onFail() {
-                                    makeToast(R.string.taskfail);
-                                }
-
-                                @Override
-                                public void onComplete(String completeString) {
-                                    Log.d("onComplete", "ExecTaskCallbackHandler");
-                                }
-                            };
                             mCommandEdit.AddLastInput(command);
-                            SessionController.getSessionController().executeCommand(mHandler, mCommandEdit, t, command);
+                            if(!SessionController.getSessionController().executeCommand(mCommandEdit, command)){
+                                makeToast(R.string.could_not_use_shell);
+                            };
                             return false;
                         }
                     }

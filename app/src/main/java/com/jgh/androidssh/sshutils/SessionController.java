@@ -177,6 +177,27 @@ public class SessionController {
         return true;
     }
 
+    public boolean executeCommand(EditText editText, String command) {
+        if (mSession == null || !mSession.isConnected()) {
+            return false;
+        } else {
+
+            try {
+                mShellController.openShell(getSession(), new Handler(), editText);
+
+            } catch (Exception e) {
+                Log.e(TAG, "Shell open exception " + e.getMessage());
+                //TODO fix general exception catching
+            }
+
+            synchronized (mShellController) {
+                mShellController.writeToOutput(command);
+            }
+        }
+
+        return true;
+    }
+
     public class SshRunnable implements Runnable {
 
         public void run() {

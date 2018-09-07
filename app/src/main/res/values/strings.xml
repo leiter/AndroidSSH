@@ -26,5 +26,6 @@
     <string name="action_settings">Settings</string>
     <string name="not_connected">Connection Status: NOT CONNECTED</string>
     <string name="connected">Connection Status: CONNECTED</string>
+    <string name="could_not_use_shell">Could not use shell. Unable to complete command.</string>
 
 </resources>

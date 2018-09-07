@@ -11,7 +11,6 @@ import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Vector;
 
 /**
@@ -24,7 +23,7 @@ public class SftpController {
 
     private static final String TAG = "SftpController";
 
-    private String mCurrentPath = "/";
+    private static String mCurrentPath = "/";
 
     SftpController() {
 
@@ -79,50 +78,32 @@ public class SftpController {
         @Override
         protected Boolean doInBackground(Void... voids) {
 
-            boolean success = true;
             try {
                 uploadFiles(mSession, mLocalFiles, mProgressDialog);
+                return true;
             } catch (JSchException e) {
                 e.printStackTrace();
                 Log.e(TAG, "JSchException " + e.getMessage());
-                success = false;
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.e(TAG, "IOException " + e.getMessage());
-                success = false;
+                return false;
             } catch (SftpException e) {
                 e.printStackTrace();
                 Log.e(TAG, "SftpException " + e.getMessage());
-                success = false;
+                return false;
             }
-            return success;
         }
 
         @Override
         protected void onPostExecute(Boolean b) {
             //TODO
         }
-
     }
 
-    private static void uploadFiles(Session session, File[] localFiles, SftpProgressMonitor spm) throws JSchException, IOException, SftpException {
-    public static void invokeUpload(Session session, File[] localFiles, SftpProgressMonitor spd){
-        new UploadTask(session,localFiles,spd).execute();
+    public static void invokeUpload(Session session, File[] localFiles, SftpProgressMonitor spd) {
+        new UploadTask(session, localFiles, spd).execute();
     }
 
-    /**
-     * Uploads the files in <b>localFiles</b> to the current directory on
-     * remote server.
-     *
-     * @param session    the Jsch SSH session instance
-     * @param localFiles array of files to be uploaded
-     * @param spm        progress monitor
-     * @throws JSchException
-     * @throws java.io.IOException
-     * @throws SftpException
-     */
-    public static void uploadFiles(Session session, File[] localFiles, SftpProgressMonitor spm)
-            throws JSchException, IOException, SftpException {
+    static void uploadFiles(Session session, File[] localFiles, SftpProgressMonitor spm)
+            throws JSchException, SftpException {
 
         if (session == null || !session.isConnected()) {
             session.connect();
@@ -132,7 +113,6 @@ public class SftpController {
         channel.setInputStream(null);
         channel.connect();
         ChannelSftp channelSftp = (ChannelSftp) channel;
-
         channelSftp.cd(mCurrentPath);
         for (File file : localFiles) {
             channelSftp.put(file.getPath(), file.getName(), spm, ChannelSftp.APPEND);
@@ -141,22 +121,15 @@ public class SftpController {
         channelSftp.disconnect();
     }
 
-    /**
-     * SHell ls command to list remote host's file list for the given directory.
-     *
-     * @param session             the session
-     * @param taskCallbackHandler handle ls success or failure
-     * @param path                relative path from current directory.
-     */
     public void lsRemoteFiles(Session session, TaskCallbackHandler taskCallbackHandler, String path) {
-        mCurrentPath = path == null || path == "" ? mCurrentPath : mCurrentPath + path + "/";
+        mCurrentPath = path == null || "".equals(path) ? mCurrentPath : mCurrentPath + path + "/";
         new LsTask(session, taskCallbackHandler).execute();
     }
 
+    public static void invokeDownload(Session session, String srcPath, String out, SftpProgressMonitor spm){
+        new DownloadTask(session, srcPath, out, spm).execute();
+    }
 
-    /**
-     * Shows all files (command ls) including directories.
-     */
     private static class LsTask extends AsyncTask<Void, Void, Boolean> {
 
         private Vector<ChannelSftp.LsEntry> mRemoteFiles;
@@ -182,33 +155,27 @@ public class SftpController {
 
             Log.d(TAG, "current path is " + mCurrentPath);
 
-            boolean success = true;
-            Channel channel = null;
+            Channel channel;
             try {
                 mRemoteFiles = null;
-                if (true) {
-                    channel = mSession.openChannel("sftp");
-                    channel.setInputStream(null);
-                    channel.connect();
-                    ChannelSftp channelsftp = (ChannelSftp) channel;
-                    String path = mCurrentPath == null ? "/" : mCurrentPath;
-                    mRemoteFiles = channelsftp.ls(path);
-                    if (mRemoteFiles == null) {
-                        Log.d(TAG, "remote file list is null");
-                    } else {
-                        for (ChannelSftp.LsEntry e : mRemoteFiles) {
-                            Log.v(TAG, " file " + e.getFilename());
-                        }
+                channel = mSession.openChannel("sftp");
+                channel.setInputStream(null);
+                channel.connect();
+                ChannelSftp channelsftp = (ChannelSftp) channel;
+                String path = mCurrentPath == null ? "/" : mCurrentPath;
+                mRemoteFiles = channelsftp.ls(path);
+                if (mRemoteFiles == null) {
+                    Log.d(TAG, "remote file list is null");
+                } else {
+                    for (ChannelSftp.LsEntry e : mRemoteFiles) {
+                        Log.v(TAG, " file " + e.getFilename());
                     }
                 }
             } catch (Exception e) {
                 Log.v(TAG, "sftprunnable exptn " + e.getCause());
-                success = false;
-                return success;
+                return false;
             }
-            if (channel != null) {
-                channel.disconnect();
-            }
+            channel.disconnect();
 
             return true;
         }
@@ -228,7 +195,7 @@ public class SftpController {
         }
     }
 
-    public void downloadFile(Session session, String srcPath, String out, SftpProgressMonitor spm) throws JSchException, SftpException {
+    public static void downloadFile(Session session, String srcPath, String out, SftpProgressMonitor spm) throws JSchException, SftpException {
         if (session == null || !session.isConnected()) {
             session.connect();
         }
@@ -240,7 +207,7 @@ public class SftpController {
         sftpChannel.disconnect();
     }
 
-    public class DownloadTask extends AsyncTask<Void, Void, Boolean> {
+    public static class DownloadTask extends AsyncTask<Void, Void, Boolean> {
 
         Session mSession;
         String mSrcPath;

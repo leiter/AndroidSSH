@@ -5,7 +5,7 @@
     android:background="@color/almostblack"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".FileListActivity"
+    tools:context=".overall.FileListActivity"
     >
 
     <RelativeLayout
@@ -13,33 +13,38 @@
         android:layout_height="wrap_content"
         android:background="@color/almostblack">
 
-        <Button
-            android:id="@+id/upbutton"
-            style="@style/buttonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:text="@string/up" />
 
-        <Button
-            android:id="@+id/connectbutton"
-            style="@style/buttonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/upbutton"
-            android:text="connect" />
 
         <TextView
             android:id="@+id/statetextview"
             style="@style/textviewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/connectbutton"
-            android:text="connected" />
-    </RelativeLayout>
+            android:gravity="center" />
+
+
+        <Button
+            android:id="@+id/upbutton"
+            style="@style/buttonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/statetextview"
+            android:text="@string/up" />
+
+        <Button
+            android:id="@+id/connectbutton"
+            style="@style/buttonStyle"
+            android:layout_below="@id/statetextview"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/upbutton"
+
+            android:text="connect" />    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

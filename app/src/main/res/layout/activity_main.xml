@@ -15,8 +15,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:orientation="horizontal">
 
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/connectstatus"
+                style="@style/textviewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Connection Status: " />
             <Button
                 android:id="@+id/enterbutton"
                 style="@style/buttonStyle"
@@ -25,12 +33,7 @@
                 android:layout_margin="10dp"
                 android:text="@string/connect_btn" />
 
-            <TextView
-                android:id="@+id/connectstatus"
-                style="@style/textviewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Connect Status: " />
+
         </LinearLayout>
 
 
@@ -46,6 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <TextView
@@ -81,6 +85,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="End session" />
+
+
+
+            <Button
+                android:id="@+id/button3"
+                style="@style/buttonStyle"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Upload" />
+
+            <Button
+                android:id="@+id/button"
+                style="@style/buttonStyle"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Download" />
+
+            <Button
+                android:id="@+id/button2"
+                style="@style/buttonStyle"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Open Shell" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

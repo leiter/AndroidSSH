@@ -77,8 +77,7 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
         mLocalGridView = findViewById(R.id.listview);
         mRemoteGridView = findViewById(R.id.remotelistview);
         // Get external storage
-        mRootFile = Environment.getExternalStorageDirectory();
-        // list files
+        mRootFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
         mFilenames.addAll(Arrays.asList(mRootFile.listFiles()));
 
         mLocaleFileListAdapter = new LocaleFileListAdapter(this, mFilenames);

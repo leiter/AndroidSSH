@@ -223,12 +223,13 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
 
     @Override
     public void onConnected() {
-        //saveUserLogin();
         Log.e("onConnected","yes  ");
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                saveUserLogin();
+
                 mConnectStatus.setText(R.string.connected);
             }
         });

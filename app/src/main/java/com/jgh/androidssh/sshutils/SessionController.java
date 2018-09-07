@@ -14,8 +14,6 @@ import com.jgh.androidssh.domain.SessionUserInfo;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.io.File;
-import java.io.IOException;
 import java.util.Properties;
 
 public class SessionController {
@@ -108,15 +106,12 @@ public class SessionController {
     }
 
     public void uploadFiles(File[] files, SftpProgressMonitor spm) {
-        if (mSftpController == null) {
-            mSftpController = new SftpController();
 
-        }
         SftpController.invokeUpload(mSession, files, spm);
     }
 
     public boolean downloadFile(String srcPath, String out, SftpProgressMonitor spm) throws JSchException, SftpException {
-        mSftpController.new DownloadTask(mSession, srcPath, out, spm).execute();
+        SftpController.invokeDownload(mSession, srcPath, out, spm);
         return true;
     }
 

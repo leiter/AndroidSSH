@@ -21,7 +21,7 @@ import java.util.List;
 
 
 public class SshConnectFragmentDialog extends DialogFragment
-        implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+        implements View.OnClickListener {
 
     private static final String USER_INFO_LIST = "userInfoList";
     private List<SessionUserInfo> userInfoList;
@@ -75,7 +75,24 @@ public class SshConnectFragmentDialog extends DialogFragment
         Spinner spinner = v.findViewById(R.id.user_selector);
         spinner.setVisibility(View.VISIBLE);
         spinner.setAdapter(new UserSpinnerAdapter(userInfoList));
-        spinner.setOnItemSelectedListener(this);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                SessionUserInfo info = userInfoList.get(i);
+                if (info != null) {
+                    mUserEdit.setText(info.getUser());
+                    mHostEdit.setText(info.getHost());
+                    mPasswordEdit.setText(info.getPassword());
+                    mPortNumEdit.setText(String.valueOf(info.getPort()));
+                    // maybe close ime
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         setText();
         return v;
     }
@@ -123,22 +140,7 @@ public class SshConnectFragmentDialog extends DialogFragment
     }
 
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//        SessionUserInfo info = userInfoList.get(i);
-//        if (info != null) {
-//            mPortNumEdit.setText(info.getPort());
-//            mUserEdit.setText(info.getUser());
-//            mHostEdit.setText(info.getHost());
-//            mPasswordEdit.setText(info.getPassword());
-//            // maybe close ime
-//        }
-    }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
 }
 
 

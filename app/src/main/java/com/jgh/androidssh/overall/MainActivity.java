@@ -213,9 +213,8 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                saveUserLogin();
-
                 mConnectStatus.setText(R.string.connected);
+                saveUserLogin();
             }
         });
     }

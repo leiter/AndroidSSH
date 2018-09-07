@@ -2,6 +2,8 @@ package com.jgh.androidssh.domain;
 
 import com.jcraft.jsch.UserInfo;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
 
 /**
@@ -29,6 +31,17 @@ public final class SessionUserInfo implements UserInfo, Serializable {
     private final String mHost;
 
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !SessionUserInfo.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        final SessionUserInfo info = (SessionUserInfo) obj;
+        return info.mPort != 0 && !StringUtils.isAllBlank(info.mHost)
+                && !StringUtils.isAllBlank(info.mPassword)
+                && !StringUtils.isAllBlank(info.mUser);
+    }
+
     /**
      * Host port
      */
@@ -48,7 +61,6 @@ public final class SessionUserInfo implements UserInfo, Serializable {
      * @param port     port number
      */
     public SessionUserInfo(String user, String host, String password, int port) {
-
         mUser = user;
         mHost = host;
         mPassword = password;

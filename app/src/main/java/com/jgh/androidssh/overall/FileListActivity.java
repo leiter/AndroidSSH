@@ -44,7 +44,7 @@ import java.util.Vector;
  * @author Jonathan Hough
  * @since 7 Dec 2012
  */
-public class FileListActivity extends Activity implements OnItemClickListener, OnClickListener, OnDragListener {
+public class FileListActivity extends Activity implements OnItemClickListener, OnClickListener {
 
     private static final String TAG = "FileListActivity";
     private ArrayList<File> mFilenames = new ArrayList<>();
@@ -52,7 +52,6 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
     private GridView mRemoteGridView;
     private LocaleFileListAdapter mLocaleFileListAdapter;
     private RemoteFileListAdapter mRemoteFileListAdapter;
-    private String[] mUserInfo;
     private File mRootFile;
     private Button mUpButton, mConnectButton;
     private TextView mStateView;
@@ -61,24 +60,18 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
     private Vector<ChannelSftp.LsEntry> mRemoteFiles;
     private boolean mIsProcessing = false;
 
-    @Override
-    public boolean onDrag(View v, DragEvent event) {
-        return true;
-    }
-
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
         setContentView(R.layout.activity_filelistactivity);
-
-        mUserInfo = getIntent().getExtras().getStringArray("UserInfo");
         mLocalGridView = findViewById(R.id.listview);
         mRemoteGridView = findViewById(R.id.remotelistview);
         // Get external storage
         mRootFile = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
         mFilenames.addAll(Arrays.asList(mRootFile.listFiles()));
+
 
         mLocaleFileListAdapter = new LocaleFileListAdapter(this, mFilenames);
 
@@ -133,7 +126,7 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
 
             setAdapter(mFilenames);
             mLocalGridView.setAdapter(mLocaleFileListAdapter);
-            mLocaleFileListAdapter.notifyDataSetChanged();
+//            mLocaleFileListAdapter.notifyDataSetChanged();
 
         } else {
             // sftp the file
@@ -152,7 +145,7 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
         if (v == mUpButton) {
 
             boolean hasParent = mRootFile.getParentFile() != null;
-            if (hasParent) {
+            if (hasParent && mRootFile.getParentFile().canRead()) {
                 mRootFile = mRootFile.getParentFile();
 
                 mFilenames.clear();
@@ -160,7 +153,6 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
 
                 setAdapter(mFilenames);
                 mLocalGridView.setAdapter(mLocaleFileListAdapter);
-                mLocaleFileListAdapter.notifyDataSetChanged();
             }
 
         }

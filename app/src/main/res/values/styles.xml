@@ -1,6 +1,7 @@
 <resources>
 
     <style name="AndroidSSH" parent="Theme.AppCompat.DayNight.DarkActionBar" >
+        <item name="android:windowBackground">@color/almostblack</item>
         <item name="buttonStyle">@style/buttonStyle</item>
 
     </style>

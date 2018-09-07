@@ -1,6 +1,5 @@
 package com.jgh.androidssh.dialogs;
 
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -45,22 +44,10 @@ public final class SshConnectFragmentDialog extends DialogFragment
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-    }
-
-    private void setupSpinner() {
-        Activity activity = getActivity();
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (SessionController.getSessionController().getUserInfos() != null) {
             userInfoList = SessionController.getSessionController().getUserInfos();
-            setupSpinner();
         }
 
         View v = inflater.inflate(R.layout.fragment_main, container, false);

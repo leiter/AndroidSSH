@@ -127,7 +127,7 @@ public class SftpController {
         new LsTask(session, taskCallbackHandler).execute();
     }
 
-    public static void invokeDownload(Session session, String srcPath, String out, SftpProgressMonitor spm){
+    public static void invokeDownload(Session session, String srcPath, String out, SftpProgressMonitor spm) {
         new DownloadTask(session, srcPath, out, spm).execute();
     }
 

@@ -96,13 +96,6 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
 
     }
 
-    public void setupRemoteFiles(RemoteFileListAdapter remoteFileListAdapter) {
-        mRemoteFileListAdapter = remoteFileListAdapter;
-        mRemoteGridView.setAdapter(mRemoteFileListAdapter);
-        remoteFileListAdapter.notifyDataSetChanged();
-
-    }
-
     private void setAdapter(ArrayList<File> files) {
         mLocaleFileListAdapter = new LocaleFileListAdapter(this, files);
     }

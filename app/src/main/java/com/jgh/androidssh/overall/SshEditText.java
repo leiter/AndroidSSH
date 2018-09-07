@@ -1,6 +1,7 @@
 package com.jgh.androidssh.overall;
 
 import android.content.Context;
+import android.text.InputType;
 import android.text.Layout;
 import android.text.Selection;
 import android.util.AttributeSet;
@@ -30,8 +31,8 @@ public class SshEditText extends android.support.v7.widget.AppCompatEditText {
         setup();
     }
 
-    public void setup(){
-//        this.setRawInputType(InputType.TYPE_CLASS_TEXT);
+    public void setup() {
+        this.setRawInputType(InputType.TYPE_CLASS_TEXT);
 //        this.setImeOptions(EditorInfo.IME_ACTION_GO);
 //        this.setTextSize(12f);
     }
@@ -79,7 +80,7 @@ public class SshEditText extends android.support.v7.widget.AppCompatEditText {
     public boolean isNewLine() {
 
         int i = this.getText().toString().toCharArray().length;
-        if(i == 0)
+        if (i == 0)
             return true;
 
         char s = this.getText().toString().toCharArray()[i - 1];
@@ -88,11 +89,11 @@ public class SshEditText extends android.support.v7.widget.AppCompatEditText {
         return false;
     }
 
-    public synchronized void setPrompt(String prompt){
+    public synchronized void setPrompt(String prompt) {
         mPrompt = prompt;
     }
 
-    public synchronized String getPrompt(){
+    public synchronized String getPrompt() {
         return mPrompt;
     }
 
@@ -102,21 +103,20 @@ public class SshEditText extends android.support.v7.widget.AppCompatEditText {
                 true);
     }
 
-    private class SshConnectionWrapper extends InputConnectionWrapper{
+    private class SshConnectionWrapper extends InputConnectionWrapper {
 
 
-        public SshConnectionWrapper(InputConnection target, boolean mutable) {
+        SshConnectionWrapper(InputConnection target, boolean mutable) {
             super(target, mutable);
         }
 
         @Override
         public boolean sendKeyEvent(KeyEvent event) {
             if (event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
-                if(isNewLine()) {
+                if (isNewLine()) {
                     return false;
 
-                }
-                else if(getCurrentCursorLine() < getLineCount() - 1){
+                } else if (getCurrentCursorLine() < getLineCount() - 1) {
                     return false;
                 }
             }
@@ -124,17 +124,13 @@ public class SshEditText extends android.support.v7.widget.AppCompatEditText {
         }
 
         @Override
-        public boolean deleteSurroundingText (int beforeLength, int afterLength){
+        public boolean deleteSurroundingText(int beforeLength, int afterLength) {
 
-            if(isNewLine()) {
+            if (isNewLine()) {
                 return false;
-
-            }
-            else if(getCurrentCursorLine() < getLineCount() - 1){
+            } else if (getCurrentCursorLine() < getLineCount() - 1) {
                 return false;
-            }
-
-            else {
+            } else {
                 return super.deleteSurroundingText(beforeLength, afterLength);
             }
         }

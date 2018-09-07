@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class MainActivity extends AppCompatActivity implements ConnectionStatusListener,OnClickListener {
+public class MainActivity extends AppCompatActivity implements ConnectionStatusListener, OnClickListener {
 
     private static final String TAG = "MainActivity";
     private TextView mConnectStatus;
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
                             // get the last line of terminal
                             String command = getLastLine();
                             mCommandEdit.AddLastInput(command);
-                            if(!SessionController.getSessionController().executeCommand(mCommandEdit, command)){
+                            if (!SessionController.getSessionController().executeCommand(mCommandEdit, command)) {
                                 makeToast(R.string.could_not_use_shell);
                             }
                             return false;
@@ -105,14 +106,14 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
                     }
                 }
         );
-
-
         loadUserListFromPrefs();
     }
 
 
     private void makeToast(int text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+        Toast t = Toast.makeText(this, text, Toast.LENGTH_SHORT);
+        t.setGravity(Gravity.TOP, 0, 0);
+        t.show();
     }
 
     private void startSftpActivity() {
@@ -189,8 +190,8 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
 
         SshConnectFragmentDialog newFragment = SshConnectFragmentDialog.newInstance(null);
         newFragment.setListener(//new ConnectionStatusListener() {
-          this
-        //}
+                this
+                //}
         );
         newFragment.show(ft, "dialog");
     }
@@ -207,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
 
     @Override
     public void onConnected() {
-        Log.e("onConnected","yes  ");
+        Log.e("onConnected", "yes  ");
 
         runOnUiThread(new Runnable() {
             @Override
@@ -225,9 +226,11 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
         if (userInfos != null)
             for (SessionUserInfo sUi :
                     userInfos) {
-                stringBuilder.append(sUi.getUser()).append(",")
+                stringBuilder
+                        .append(sUi.getUser()).append(",")
                         .append(sUi.getHost()).append(",")
-                        .append(sUi.getPort()).append(",").append(sUi.getPassword()).append("###");
+                        .append(sUi.getPort()).append(",")
+                        .append(sUi.getPassword()).append("###");
             }
         return stringBuilder.toString();
     }
@@ -237,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
         SharedPreferences preferences = getSharedPreferences("userInfos", Context.MODE_PRIVATE);
         String[] users = preferences.getString("users", "").split("###");
         List<SessionUserInfo> result = new ArrayList<>();
-        if (users.length>0)Log.e("MAIN_users","sdfs  " + users.length);
+        if (users.length > 0) Log.e("MAIN_users", "sdfs  " + users.length);
         if (users.length > 1) {
             for (String s : users) {
                 String[] u = s.split(",");
@@ -253,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
                 getSharedPreferences("userInfos", Context.MODE_PRIVATE);
         String payload = getUserList();
 //        if (!)
-        Log.e("saveddd","no  " + payload);
+        Log.e("saveddd", "no  " + payload);
         preferences.edit().putString("users", payload).apply();
     }
 

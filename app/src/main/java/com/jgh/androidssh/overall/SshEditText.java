@@ -1,7 +1,6 @@
 package com.jgh.androidssh.overall;
 
 import android.content.Context;
-import android.text.InputType;
 import android.text.Layout;
 import android.text.Selection;
 import android.util.AttributeSet;
@@ -32,9 +31,9 @@ public class SshEditText extends android.support.v7.widget.AppCompatEditText {
     }
 
     public void setup(){
-        this.setRawInputType(InputType.TYPE_CLASS_TEXT);
-        this.setImeOptions(EditorInfo.IME_ACTION_GO);
-        this.setTextSize(12f);
+//        this.setRawInputType(InputType.TYPE_CLASS_TEXT);
+//        this.setImeOptions(EditorInfo.IME_ACTION_GO);
+//        this.setTextSize(12f);
     }
 
     @Override

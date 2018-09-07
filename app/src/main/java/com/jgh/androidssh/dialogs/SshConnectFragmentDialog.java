@@ -98,18 +98,12 @@ public class SshConnectFragmentDialog extends DialogFragment
     }
 
     private void setText(){
-        mUserEdit.setText("wir");
-        mHostEdit.setText("192.168.0.170");
-        mPasswordEdit.setText("wirZusammen");
-        mPortNumEdit.setText("72");
+        mUserEdit.setText(  R.string.myUsername);
+        mHostEdit.setText(R.string.myHostname);
+        mPasswordEdit.setText(R.string.myPassword);
+        mPortNumEdit.setText(R.string.myPortPassword);
     }
 
-    /**
-     * Checks if the EditText is empty.
-     *
-     * @param editText
-     * @return true if empty
-     */
     private boolean isEditTextEmpty(EditText editText) {
         return editText.getText() == null ||
                 editText.getText().toString().equalsIgnoreCase("");
@@ -118,9 +112,7 @@ public class SshConnectFragmentDialog extends DialogFragment
     @Override
     public void onClick(View v) {
 
-
-
-        if (v == mButton) {
+        if (v.getId() == R.id.enterbutton) {
             if (isEditTextEmpty(mUserEdit) || isEditTextEmpty(mHostEdit)
                     || isEditTextEmpty(mPasswordEdit) || isEditTextEmpty(mPortNumEdit)) {
                 return;
@@ -138,8 +130,6 @@ public class SshConnectFragmentDialog extends DialogFragment
             dismiss();
         }
     }
-
-
 
 }
 

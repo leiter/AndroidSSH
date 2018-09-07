@@ -13,9 +13,9 @@ import java.util.List;
 
 public final class UserSpinnerAdapter extends BaseAdapter {
 
-    List<SessionUserInfo> data;
+    private List<SessionUserInfo> data;
 
-    public UserSpinnerAdapter(List<SessionUserInfo> data) {
+    UserSpinnerAdapter(List<SessionUserInfo> data) {
         this.data = data;
     }
 
@@ -41,13 +41,11 @@ public final class UserSpinnerAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if(view==null){
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.spinner_item,viewGroup,false);
+            view = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.spinner_item,viewGroup,false);
         }
         TextView tv = view.findViewById(R.id.username);
         tv.setText(data.get(i).getUser());
-
-
-
         return view;
     }
 }

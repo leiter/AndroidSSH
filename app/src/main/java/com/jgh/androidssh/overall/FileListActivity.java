@@ -147,16 +147,12 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
             boolean hasParent = mRootFile.getParentFile() != null;
             if (hasParent && mRootFile.getParentFile().canRead()) {
                 mRootFile = mRootFile.getParentFile();
-
                 mFilenames.clear();
                 Collections.addAll(mFilenames, mRootFile.listFiles());
-
                 setAdapter(mFilenames);
                 mLocalGridView.setAdapter(mLocaleFileListAdapter);
             }
-
         }
-
     }
 
     private void showRemoteFiles() {
@@ -354,8 +350,6 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
 
                 default: break;
             }
-
-
             return false;
         }
     }

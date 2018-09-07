@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-
             android:orientation="vertical">
 
             <TextView
@@ -23,8 +22,8 @@
                 style="@style/textviewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Connection Status: " />
+                android:gravity="center" />
+
             <Button
                 android:id="@+id/enterbutton"
                 style="@style/buttonStyle"
@@ -32,8 +31,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:text="@string/connect_btn" />
-
-
         </LinearLayout>
 
 
@@ -86,12 +83,9 @@
                 android:layout_height="wrap_content"
                 android:text="End session" />
 
-
-
             <Button
                 android:id="@+id/button3"
                 style="@style/buttonStyle"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Upload" />
@@ -99,7 +93,6 @@
             <Button
                 android:id="@+id/button"
                 style="@style/buttonStyle"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Download" />
@@ -107,7 +100,6 @@
             <Button
                 android:id="@+id/button2"
                 style="@style/buttonStyle"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Open Shell" />

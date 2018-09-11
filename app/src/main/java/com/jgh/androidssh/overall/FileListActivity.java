@@ -106,13 +106,14 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
             mRootFile = mFilenames.get(position);
             Log.d(TAG, "ROOT FILE POSIITON IS " + mRootFile);
             mFilenames.clear();
+
             if (mRootFile.listFiles() == null) {
                 return;
             }
             mFilenames.addAll(Arrays.asList(mRootFile.listFiles()));
-            setAdapter(mFilenames);
-            mLocalGridView.setAdapter(mLocaleFileListAdapter);
-//            mLocaleFileListAdapter.notifyDataSetChanged();
+//            setAdapter(mFilenames);
+//            mLocalGridView.setAdapter(mLocaleFileListAdapter);
+            mLocaleFileListAdapter.notifyDataSetChanged();
 
         } else {
             // sftp the file
@@ -300,7 +301,7 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
 
             View v = getView();
             int height = v.getHeight();
-            int width =  v.getWidth();
+            int width = v.getWidth();
 
             mBox.setBounds(0, 0, width, height);
             shadowSize.set(width, height);
@@ -309,26 +310,31 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
         }
     }
 
-    private class FileDragListener implements OnDragListener{
+    private class FileDragListener implements OnDragListener {
 
         @Override
         public boolean onDrag(View view, DragEvent dragEvent) {
-            switch(dragEvent.getAction()){
-                case DragEvent.ACTION_DRAG_STARTED: break; //TODO
+            switch (dragEvent.getAction()) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    break; //TODO
 
-                case DragEvent.ACTION_DRAG_ENTERED: break; //TODO
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    break; //TODO
 
-                case DragEvent.ACTION_DRAG_EXITED: break; //TODO
+                case DragEvent.ACTION_DRAG_EXITED:
+                    break; //TODO
 
                 case DragEvent.ACTION_DROP:
-                    if(view.getId()==R.id.listview){
-                        Log.d(TAG,"DROPPED");
+                    if (view.getId() == R.id.listview) {
+                        Log.d(TAG, "DROPPED");
                     }
                     break; //TODO
 
-                case DragEvent.ACTION_DRAG_ENDED: break; //TODO
+                case DragEvent.ACTION_DRAG_ENDED:
+                    break; //TODO
 
-                default: break;
+                default:
+                    break;
             }
             return false;
         }

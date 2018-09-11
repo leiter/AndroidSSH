@@ -35,8 +35,7 @@ public class LocaleFileListAdapter extends BaseAdapter {
     }
 
     public Object getItem(int arg0) {
-        // TODO Auto-generated method stub
-        return null;
+        return mFiles.get(arg0);
     }
 
     public long getItemId(int arg0) {
@@ -67,9 +66,7 @@ public class LocaleFileListAdapter extends BaseAdapter {
             holder.color = 0xffff8888;
             holder.imageView.setImageResource(R.drawable.file);
         }
-
 //        holder.textView.setTextColor(holder.color);
-
         return convertView;
     }
 

@@ -27,5 +27,9 @@
     <string name="not_connected">Connection Status: NOT CONNECTED</string>
     <string name="connected">Connection Status: CONNECTED</string>
     <string name="could_not_use_shell">Could not use shell. Unable to complete command.</string>
+    <string name="myUsername" />
+    <string name="myHostname" />
+    <string name="myPassword" />
+    <string name="myPortPassword" />
 
 </resources>

@@ -30,8 +30,8 @@ public final class SshConnectFragmentDialog extends DialogFragment
     private EditText mPortNumEdit;
     private ConnectionStatusListener mListener;
 
-    public void setListener(ConnectionStatusListener listenr) {
-        mListener = listenr;
+    public void setListener(ConnectionStatusListener listener) {
+        mListener = listener;
     }
 
     public static SshConnectFragmentDialog newInstance(@Nullable SessionUserInfo info) {
@@ -84,7 +84,7 @@ public final class SshConnectFragmentDialog extends DialogFragment
     }
 
     private void setText(){
-        mUserEdit.setText(  R.string.myUsername);
+        mUserEdit.setText(R.string.myUsername);
         mHostEdit.setText(R.string.myHostname);
         mPasswordEdit.setText(R.string.myPassword);
         mPortNumEdit.setText(R.string.myPortPassword);
@@ -99,8 +99,8 @@ public final class SshConnectFragmentDialog extends DialogFragment
     public void onClick(View v) {
 
         if (v.getId() == R.id.enterbutton) {
-            if (isEditTextEmpty(mUserEdit) || isEditTextEmpty(mHostEdit)
-                    || isEditTextEmpty(mPasswordEdit) || isEditTextEmpty(mPortNumEdit)) {
+            if (isEditTextEmpty(mUserEdit) ||
+                    isEditTextEmpty(mHostEdit) || isEditTextEmpty(mPortNumEdit)) {
                 return;
             }
             int port = Integer.valueOf(mPortNumEdit.getText().toString());

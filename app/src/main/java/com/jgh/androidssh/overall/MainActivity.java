@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
     private String getSecondLastLine() {
 
         String[] lines = mCommandEdit.getText().toString().split("\n");
-        if (lines == null || lines.length < 2) return mCommandEdit.getText().toString().trim();
+        if (lines.length < 2) return mCommandEdit.getText().toString().trim();
 
         else {
             int len = lines.length;
@@ -252,10 +252,8 @@ public class MainActivity extends AppCompatActivity implements ConnectionStatusL
     }
 
     private void saveUserLogin() {
-        SharedPreferences preferences =
-                getSharedPreferences("userInfos", Context.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences("userInfos", Context.MODE_PRIVATE);
         String payload = getUserList();
-//        if (!)
         Log.e("saveddd", "no  " + payload);
         preferences.edit().putString("users", payload).apply();
     }

@@ -34,7 +34,7 @@ public class LocaleFileListAdapter extends BaseAdapter {
         return mFiles.size();
     }
 
-    public Object getItem(int arg0) {
+    public File getItem(int arg0) {
         return mFiles.get(arg0);
     }
 
@@ -66,7 +66,7 @@ public class LocaleFileListAdapter extends BaseAdapter {
             holder.color = 0xffff8888;
             holder.imageView.setImageResource(R.drawable.file);
         }
-//        holder.textView.setTextColor(holder.color);
+        holder.textView.setTextColor(holder.color);
         return convertView;
     }
 

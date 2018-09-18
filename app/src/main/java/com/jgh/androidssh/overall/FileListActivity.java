@@ -102,7 +102,8 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
 
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
         // change the list
-        if (mFilenames.get(position).isDirectory()) {
+//        mFilenames.get(position)
+        if (mLocaleFileListAdapter.getItem(position).isDirectory()) {
             mRootFile = mFilenames.get(position);
             Log.d(TAG, "ROOT FILE POSIITON IS " + mRootFile);
             mFilenames.clear();

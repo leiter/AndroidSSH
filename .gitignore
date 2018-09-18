@@ -1,6 +1,10 @@
 .gradle
 /local.properties
 /.idea/workspace.xml
+/.idea/caches
+/.idea/codestyles
 /.idea/libraries
 .DS_Store
 /build
+/app/app.iml
+/app/src/debug

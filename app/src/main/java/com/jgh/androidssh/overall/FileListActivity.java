@@ -44,7 +44,7 @@ import java.util.Vector;
  * @author Jonathan Hough
  * @since 7 Dec 2012
  */
-public class FileListActivity extends Activity implements OnItemClickListener, OnClickListener {
+public final class FileListActivity extends Activity implements OnItemClickListener, OnClickListener {
 
     private static final String TAG = "FileListActivity";
     private ArrayList<File> mFilenames = new ArrayList<>();
@@ -270,7 +270,9 @@ public class FileListActivity extends Activity implements OnItemClickListener, O
                     String name = mRemoteFileListAdapter.getRemoteFiles().get(position).getFilename();
                     String out = mRootFile.getAbsolutePath() + "/" + name;
 
-                    mSessionController.downloadFile(mRemoteFileListAdapter.getRemoteFiles().get(position).getFilename(), out, progressDialog);
+                    mSessionController.downloadFile(
+                            mRemoteFileListAdapter.getRemoteFiles()
+                                    .get(position).getFilename(), out, progressDialog);
                 } catch (JSchException je) {
                     Log.d(TAG, "JschException " + je.getMessage());
                 } catch (SftpException se) {

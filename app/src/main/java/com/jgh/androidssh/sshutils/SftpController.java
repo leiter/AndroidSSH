@@ -20,7 +20,7 @@ import java.util.Vector;
  * server. For each process a new sftpchannel is opened and closed
  * after completion.
  */
-public class SftpController {
+public final class SftpController {
 
     private static final String TAG = "SftpController";
 

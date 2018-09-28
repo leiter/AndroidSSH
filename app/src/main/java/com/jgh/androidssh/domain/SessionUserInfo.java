@@ -30,7 +30,6 @@ public final class SessionUserInfo implements UserInfo, Serializable {
      */
     private final String mHost;
 
-
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !SessionUserInfo.class.isAssignableFrom(obj.getClass())) {

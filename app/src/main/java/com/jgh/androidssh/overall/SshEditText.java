@@ -10,7 +10,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputConnectionWrapper;
 
-public class SshEditText extends android.support.v7.widget.AppCompatEditText {
+public final class SshEditText extends android.support.v7.widget.AppCompatEditText {
 
     private String mlastInput;
 

@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * file list. Differentiates between directories and non-directories.
  *
  */
-public class LocaleFileListAdapter extends BaseAdapter {
+public final class LocaleFileListAdapter extends BaseAdapter {
 
     private ArrayList<File> mFiles;
     private LayoutInflater mInflater;
@@ -47,7 +47,7 @@ public class LocaleFileListAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.listview_item, null);
+            convertView = mInflater.inflate(R.layout.listview_item,parent,false);
             holder.textView = convertView.findViewById(R.id.textview_item);
             holder.imageView = convertView.findViewById(R.id.imageview_item);
             convertView.setTag(holder);
@@ -70,7 +70,7 @@ public class LocaleFileListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private static class ViewHolder {
+    static class ViewHolder {
         ImageView imageView;
         TextView textView;
         int color;

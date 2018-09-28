@@ -22,9 +22,9 @@ import java.io.InputStreamReader;
  * <p/>
  * Created by Jon Hough on 5/17/14.
  */
-public class ShellController {
+public final class ShellController {
 
-    public static final String TAG = "ShellController";
+    private static final String TAG = ShellController.class.getSimpleName();
     /**
      *
      */
@@ -120,7 +120,7 @@ public class ShellController {
     public void openShell(Session session, Handler handler, EditText editText) throws JSchException, IOException {
         if (session == null) throw new NullPointerException("Session cannot be null!");
         if (!session.isConnected()) throw new IllegalStateException("Session must be connected.");
-        final Handler myHandler = handler;
+        final Handler myHandler = new Handler();//handler;
         final EditText myEditText = editText;
         mChannel = session.openChannel("shell");
         mChannel.connect();
@@ -138,7 +138,8 @@ public class ShellController {
                             myHandler.post(new Runnable() {
                                 public void run() {
                                     synchronized (myEditText) {
-                                        ((SshEditText)myEditText).setPrompt(result); //set the prompt to be the current line, so eventually it will be the last line.
+                                        ((SshEditText)myEditText).setPrompt(result);
+                                        //set the prompt to be the current line, so eventually it will be the last line.
                                         String string = myEditText.getText().toString() +
                                                 "\r\n" + result +
                                                 "\r\n" + fetchPrompt(result);

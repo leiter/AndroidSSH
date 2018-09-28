@@ -14,18 +14,11 @@ import com.jgh.androidssh.R;
 import java.util.Vector;
 
 
-/**
- * Adapter for holding data of remote files
- * in remote host's current directory.
- */
-public class RemoteFileListAdapter extends BaseAdapter {
+public final class RemoteFileListAdapter extends BaseAdapter {
 
     private Vector<ChannelSftp.LsEntry> mFiles;
     private LayoutInflater mInflater;
 
-    //
-    // Constructor
-    //
     public RemoteFileListAdapter(Context context, Vector<ChannelSftp.LsEntry> files) {
         mFiles = files;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -49,11 +42,9 @@ public class RemoteFileListAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-
-            convertView = mInflater.inflate(R.layout.listview_item, null);
-            ImageView imageView = convertView.findViewById(R.id.imageview_item);
+            convertView = mInflater.inflate(R.layout.listview_item, parent,false);
             holder.textView = convertView.findViewById(R.id.textview_item);
-            holder.imageView = imageView;
+            holder.imageView = convertView.findViewById(R.id.imageview_item);
             // change text color for directories
             convertView.setTag(holder);
         }
@@ -75,18 +66,11 @@ public class RemoteFileListAdapter extends BaseAdapter {
         return convertView;
     }
 
-
-
-    /**
-     * Private view holder class
-     *
-     */
-    private class ViewHolder {
+    private static class ViewHolder {
         ImageView imageView;
         TextView textView;
         int color;
     }
-
 
     public Vector<ChannelSftp.LsEntry> getRemoteFiles(){
         return mFiles;

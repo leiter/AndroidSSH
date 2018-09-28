@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
-public class SessionController {
+public final class SessionController {
 
     private static final String TAG = "SessionController";
 

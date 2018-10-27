@@ -47,7 +47,7 @@ jobs:
       - run:
           command: ./gradlew test
 
-      - deployment:
+      - deploy:
           espresso:
             branch: master
             commands:

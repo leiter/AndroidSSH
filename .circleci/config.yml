@@ -51,7 +51,7 @@ jobs:
           espresso:
             branch: master
             commands:
-              - echo "Hello"
+              echo Hello
 #      - type: deploy
 #          name: "Publish on release tags"
 #        command: |

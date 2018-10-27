@@ -48,10 +48,8 @@ jobs:
           command: ./gradlew test
 
       - deploy:
-          espresso:
-            branch: master
-            commands:
-              echo Hello
+          command: |
+            echo HEEEEL
 #      - type: deploy
 #          name: "Publish on release tags"
 #        command: |

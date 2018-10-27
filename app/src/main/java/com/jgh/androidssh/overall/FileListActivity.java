@@ -94,6 +94,10 @@ public final class FileListActivity extends Activity implements OnItemClickListe
             mStateView.setText("Disconnected");
         }
 
+
+        Utils.getFilesFromRoots(mRootFile.listFiles()).size();
+
+
     }
 
     private void setAdapter(ArrayList<File> files) {

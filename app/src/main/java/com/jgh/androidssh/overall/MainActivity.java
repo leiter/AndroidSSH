@@ -30,7 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public final class MainActivity extends AppCompatActivity implements ConnectionStatusListener, OnClickListener {
+public final class MainActivity extends AppCompatActivity
+        implements ConnectionStatusListener, OnClickListener {
 
     private static final String TAG = "MainActivity";
     private TextView mConnectStatus;

@@ -8,17 +8,17 @@ import java.util.HashMap;
 import java.util.List;
 
 public final class Utils {
-    private Utils(){
+    private Utils() {
 
     }
 
-    public static File[] getAllFiles(@NonNull File dir){
+    public static File[] getAllFiles(@NonNull File dir) {
         List<File> bucket = new ArrayList<>();
         File[] rootFiles = dir.listFiles();
-        for (File f : rootFiles){
-            if (f.isDirectory()){
+        for (File f : rootFiles) {
+            if (f.isDirectory()) {
                 getAllFiles(f);
-            }else {
+            } else {
                 bucket.add(f);
             }
         }
@@ -26,16 +26,17 @@ public final class Utils {
         return bucket.toArray(result);
     }
 
-    public static HashMap<String,File[]> getFilesFromRoots(@NonNull File[] dirs){
-        HashMap<String,File[]> result = new HashMap<>();
-        for (File f : dirs){
-            if (f.isDirectory()){
-                result.put(f.getName(),getAllFiles(f));
+    public static HashMap<String, File[]> getFilesFromRoots(@NonNull File[] dirs) {
+        HashMap<String, File[]> result = new HashMap<>();
+
+        for (File f : dirs) {
+            if (f.isDirectory()) {
+                result.put(f.getName(), getAllFiles(f));
             }
+
         }
         return result;
     }
-
 
 
 }

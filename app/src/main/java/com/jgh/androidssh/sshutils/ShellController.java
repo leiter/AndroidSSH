@@ -67,7 +67,7 @@ public final class ShellController {
      * @throws java.io.IOException
      */
     public synchronized void disconnect() throws IOException {
-        try {
+
             Log.v(TAG, "close shell channel");
             //disconnect channel
             if (mChannel != null)
@@ -79,9 +79,6 @@ public final class ShellController {
             mDataOutputStream.close();
             mBufferedReader.close();
 
-        }catch(Throwable t){
-            Log.e(TAG, "Exception: "+t.getMessage());
-        }
     }
 
     /**
